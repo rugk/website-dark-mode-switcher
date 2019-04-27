@@ -4,8 +4,6 @@
 
 "use strict";
 
-const PREFER_COLOR_SCHEME_MEDIA_RULE = "(prefers-color-scheme:";
-
 /**
  * Apply the dark style.
  *
@@ -13,36 +11,56 @@ const PREFER_COLOR_SCHEME_MEDIA_RULE = "(prefers-color-scheme:";
  * @returns {void}
  */
 function applyDarkStyle() {
-    for (const sheet of document.styleSheets) {
-        for (const cssRule of sheet.cssRules) {
+    // debugger;
+    const darkMediaStyle = Array.from(document.styleSheets).reduce((prev, styleSheet) => {
+        /* workaround for crazy HTML spec throwing an SecurityError here,
+         * see https://discourse.mozilla.org/t/accessing-some-fonts-css-style-sheet-via-stylesheet/38717?u=rugkx
+         * and https://stackoverflow.com/questions/21642277/security-error-the-operation-is-insecure-in-firefox-document-stylesheets */
+        try {
+            styleSheet.cssRules; // eslint-disable-line no-unused-expressions
+        } catch (e) {
+            return prev;
+        }
+
+        return Array.from(styleSheet.cssRules).reduce((prev, cssRule) => {
             if (cssRule instanceof CSSMediaRule) {
-                if (cssRule.conditionText.startsWith(PREFER_COLOR_SCHEME_MEDIA_RULE)) {
-                    console.log(cssRule);
-                    debugger;
+                switch (cssRule.conditionText) {
+                case "(prefers-color-scheme: dark)":
+                case "(prefers-color-scheme: light)":
+                    return Array.from(cssRule.cssRules).reduce((prev, subCssRule) => {
+                        return prev + subCssRule.cssText;
+                    }, prev);
+                }
+            }
+            return prev;
+        }, prev);
+    }, "");
+    debugger;
 
-                    const media = cssRule.media;
-                    for (let i = 0; i < media.length; i++) {
-                        switch (media[i]) {
-                        case "(prefers-color-scheme: dark)":
+    let cssRules;
+    for (const styleSheet of document.styleSheets) {
+        /* workaround for crazy HTML spec throwing an SecurityError here,
+         * see https://discourse.mozilla.org/t/accessing-some-fonts-css-style-sheet-via-stylesheet/38717?u=rugkx
+         * and https://stackoverflow.com/questions/21642277/security-error-the-operation-is-insecure-in-firefox-document-stylesheets */
+        try {
+            styleSheet.cssRules; // eslint-disable-line no-unused-expressions
+        } catch (e) {
+            continue;
+        }
 
-                            // can we toggle it
-                            media[i] = "(prefers-color-scheme: light)";
-
-                            break;
-                        case "(prefers-color-scheme: light)":
-
-                            // can we toggle it
-                            media[i] = "(prefers-color-scheme: dark)";
-
-                            break;
-                        default:
-
-                        }
+        for (const cssRule of styleSheet.cssRules) {
+            if (cssRule instanceof CSSMediaRule) {
+                switch (cssRule.conditionText) {
+                case "(prefers-color-scheme: dark)":
+                case "(prefers-color-scheme: light)":
+                    for (const subCssRule of cssRule.cssRules) {
+                        cssRules = cssRules + subCssRule.cssText;
                     }
                 }
             }
         }
     }
+    debugger;
 }
 
 applyDarkStyle();
