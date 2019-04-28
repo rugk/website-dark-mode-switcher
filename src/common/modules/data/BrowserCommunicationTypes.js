@@ -11,5 +11,6 @@
  * @type {Object.<string, string>}
  */
 export const COMMUNICATION_MESSAGE_TYPE = Object.freeze({
-    INSERT_CSS: "insertCss"
+    INSERT_CSS: "insertCss",
+    NEW_SETTING: "newSetting"
 });

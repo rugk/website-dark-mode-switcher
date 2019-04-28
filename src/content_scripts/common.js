@@ -6,9 +6,6 @@
 // tab ID is injected by background script (CssAnalysis)
 /* globals MY_TAB_ID */
 
-const PREFER_COLOR_DARK = "(prefers-color-scheme: dark)";
-const PREFER_COLOR_LIGHT = "(prefers-color-scheme: light)";
-
 let fakedColorStatus = null;
 
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
@@ -19,7 +16,7 @@ const COLOR_STATUS = Object.freeze({
     NO_OVERWRITE: Symbol("add-on must not overwrite feature"),
 });
 const MEDIA_QUERY_PREFER_COLOR = Object.freeze({
-    [COLOR_STATUS.LIGHT]: "(prefers-color-scheme: dark)",
+    [COLOR_STATUS.LIGHT]: "(prefers-color-scheme: light)",
     [COLOR_STATUS.DARK]: "(prefers-color-scheme: dark)",
     [COLOR_STATUS.NO_PREFERENCE]: "(prefers-color-scheme: no-preference)",
 });

@@ -5,5 +5,5 @@
  */
 
 export const DEFAULT_SETTINGS = Object.freeze({
-    debugMode: false,
+    fakedColorStatus: "dark",
 });

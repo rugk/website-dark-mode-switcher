@@ -22,6 +22,21 @@
     ]
   },
 
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "/content_scripts/common.js",
+        "/content_scripts/applyColorSchemeJs.js",
+        "/content_scripts/applyColorSchemeCss.js",
+        "/content_scripts/updateRequest.js"
+      ],
+      "all_frames": true,
+      "match_about_blank": true,
+      "run_at": "document_start"
+    }
+  ],
+
   "options_ui": {
     "page": "options/options.html",
     "browser_style": true

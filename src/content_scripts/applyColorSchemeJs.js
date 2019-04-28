@@ -4,11 +4,14 @@
 
 "use strict";
 
-const MEDIA_OVERWRITE_INDICATOR = Symbol("is overwritten");
-const ADDON_FAKED_WARNING = "Media​Query​List.addListener faked by add-on website-dark-mode-switcher; https://github.com/rugk/dark-mode-website-switcher/";
+const overwroteMatchMedia = false;
 
-let originalMatchMedia;
+const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on website-dark-mode-switcher; see https://github.com/rugk/dark-mode-website-switcher/. If it causes any problems, please open an issue.";
+
 /* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus */
+
+// eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
+/* globals exportFunction, cloneInto */
 
 /**
  * Returns the COLOR_STATUS for a media query string.
@@ -35,10 +38,9 @@ function getColorTypeFromMediaQuery(mediaQueryString) {
  * @private
  * @param {string} mediaQueryString the original media query string
  * @param {COLOR_STATUS} askedFor
- * @param {COLOR_STATUS} [fakedColorStatus]
  * @returns {Object} looks like MediaQueryList
  */
-function fakeMediaQueryResult(mediaQueryString, askedFor, fakedColorStatus = fakedColorStatus) {
+function fakeMediaQueryResult(mediaQueryString, askedFor) {
     let matches = false;
 
     // only return true, if the asked status is the same as the one we want to fake
@@ -57,6 +59,10 @@ function fakeMediaQueryResult(mediaQueryString, askedFor, fakedColorStatus = fak
             console.warn(ADDON_FAKED_WARNING);
 
             return realQuery.addListener(...args);
+
+            // TODO: if we really overwrite it and not exitend it, we get the error:
+            // TypeError: 'addListener' called on an object that does not implement interface MediaQueryList.
+            // …because we only fake/create an object, not a real MediaQueryList
         },
         removeListener: (...args) => {
             console.warn(ADDON_FAKED_WARNING);
@@ -83,20 +89,30 @@ function matchMediaOverwrite(...args) {
     case COLOR_STATUS.LIGHT:
     case COLOR_STATUS.NO_PREFERENCE: {
         const realColorStatus = getSystemMediaStatus();
+        console.log(
+            "Real media query result: ", realColorStatus, ".",
+            "We fake it to appear like: ", fakedColorStatus, ".",
+            ADDON_FAKED_WARNING
+        );
 
-        // if the real status is the same as the one we want, go on
-        if (realColorStatus === requestedMedia && fakedColorStatus === realColorStatus) {
-            // continue evaluating real result
+        // if the real status is the same as the one we fake, just go on
+        if (fakedColorStatus === realColorStatus) {
+            // continue evaluating real result, no need to fake it
             break;
         }
 
         // faking media queries is hard, and we can only a fake object
-        return fakeMediaQueryResult(mediaQueryString, requestedMedia);
+        const fakeResult = fakeMediaQueryResult(mediaQueryString, requestedMedia);
+        return cloneInto(
+            fakeResult,
+            window,
+            {cloneFunctions: true}
+        );
     }
     }
 
     // pass to default function, by default
-    return originalMatchMedia(...args);
+    return window.matchMedia(...args);
 }
 
 /**
@@ -107,17 +123,16 @@ function matchMediaOverwrite(...args) {
  */
 function applyJsOverwrite() {
     // do not overwrite twice
-    if (window.matchMedia.websiteDarkModeSwitcher === MEDIA_OVERWRITE_INDICATOR) {
+    if (overwroteMatchMedia) {
         return;
     }
 
-    originalMatchMedia = window.matchMedia;
+    // add hint for websites to detect this has been faked
+    // matchMediaOverwrite.FAKED = ADDON_FAKED_WARNING;
+    // DISABLED, as it could be used for tracking (which simple console statements itself cannot AFAIK)
 
     // actually overwrite function
-    window.matchMedia = matchMediaOverwrite;
-
-    // add indicator, so I later know that it has been overwritten
-    window.matchMedia.websiteDarkModeSwitcher = MEDIA_OVERWRITE_INDICATOR;
+    exportFunction(matchMediaOverwrite, window, {defineAs: "matchMedia"});
 }
 
 applyJsOverwrite();

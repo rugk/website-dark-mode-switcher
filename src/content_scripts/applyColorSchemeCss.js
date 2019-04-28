@@ -83,10 +83,13 @@ function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-var
 /**
  * Apply the dark style.
  *
+ * Will be triggered manually via injected content script or
+ * "newSetting" message. (see updateRequest.js).
+ *
  * @function
  * @returns {void}
  */
-function applyWantedStyle() {
+function applyWantedStyle() { // eslint-disable-line no-unused-vars
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
         // well, do nothing
         return;
@@ -115,5 +118,3 @@ function applyWantedStyle() {
         injectedCss = wantedCss;
     });
 }
-
-applyWantedStyle();
