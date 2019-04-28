@@ -12,5 +12,6 @@
  */
 export const COMMUNICATION_MESSAGE_TYPE = Object.freeze({
     INSERT_CSS: "insertCss",
+    REMOVE_CSS: "removeCss",
     NEW_SETTING: "newSetting"
 });

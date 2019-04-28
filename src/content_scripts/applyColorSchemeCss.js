@@ -11,6 +11,7 @@
 /* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
 
 const COMMUNICATE_INSERT_CSS = "insertCss";
+const COMMUNICATE_REMOVE_CSS = "removeCss";
 
 // need to save injected CSS, so we can remove it later
 let injectedCss = "";
@@ -89,7 +90,20 @@ function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-var
  * @function
  * @returns {void}
  */
-function applyWantedStyle() { // eslint-disable-line no-unused-vars
+async function applyWantedStyle() { // eslint-disable-line no-unused-vars
+    // if something is already injected, remove it first
+    if (injectedCss) {
+        await browser.runtime.sendMessage({
+            type: COMMUNICATE_REMOVE_CSS,
+            css: injectedCss,
+            tabId: MY_TAB_ID
+        }).then((...args) => {
+            console.log("old CSS removed", args);
+
+            injectedCss = "";
+        });
+    }
+
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
         // well, do nothing
         return;

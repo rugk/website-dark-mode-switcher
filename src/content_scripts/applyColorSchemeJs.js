@@ -96,7 +96,8 @@ function matchMediaOverwrite(...args) {
         );
 
         // if the real status is the same as the one we fake, just go on
-        if (fakedColorStatus === realColorStatus) {
+        // or if the whole feature is disabled, obviously
+        if (fakedColorStatus === realColorStatus || fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
             // continue evaluating real result, no need to fake it
             break;
         }

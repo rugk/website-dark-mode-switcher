@@ -81,6 +81,6 @@ export function init() {
 
 // register update for setting
 BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
-    // TODO: dead code, currently
+    console.log("Received new fakedColorStatus setting:", request.fakedColorStatus);
     gettingFakedColorStatus = Promise.resolve(request.fakedColorStatus);
 });

@@ -12,7 +12,7 @@
     "browser_style": true,
     "default_icon": "icons/icon-small-dark.svg",
     "default_title": "__MSG_browserActionButtonTitle__",
-    "default_popup": "popup/index.html",
+    "default_popup": "options/options.html",
     "theme_icons": [
       {
         "dark": "icons/icon-small-dark.svg",
