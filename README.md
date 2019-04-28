@@ -7,9 +7,13 @@
 
 <img height="200" width="200" src="assets/header.svg">
 
-This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS.
+This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS without requiring you to chnage the whole system style setting.
 
-It is inspired by …. This extension only works with modern Firefox v63 or higher.
+Test websites:
+* https://stuffandnonsense.co.uk/blog/redesigning-your-product-and-website-for-dark-mode
+* https://webkit.org/
+
+This extension only works with modern Firefox v63 or higher.
 
 ## Download
 

@@ -12,14 +12,7 @@
     "browser_style": true,
     "default_icon": "icons/icon-small-dark.svg",
     "default_title": "__MSG_browserActionButtonTitle__",
-    "default_popup": "options/options.html",
-    "theme_icons": [
-      {
-        "dark": "icons/icon-small-dark.svg",
-        "light": "icons/icon-small-light.svg",
-        "size": 32
-      }
-    ]
+    "default_popup": "options/options.html"
   },
 
   "content_scripts": [
@@ -47,12 +40,6 @@
   },
 
   "content_security_policy": "default-src 'self'",
-  "icons": {
-    "16": "icons/icon-small-colored.svg",
-    "32": "icons/icon-small-colored.svg",
-    "48": "icons/icon-large.svg",
-    "96": "icons/icon-large.svg"
-  },
   "default_locale": "en",
 
   "permissions": [

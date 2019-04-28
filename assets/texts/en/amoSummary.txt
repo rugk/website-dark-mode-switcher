@@ -1,1 +1,1 @@
-This add-on allows you to …
+This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the prefers-color-scheme media feature of CSS, so you can make websites look dark even with a light system style.
