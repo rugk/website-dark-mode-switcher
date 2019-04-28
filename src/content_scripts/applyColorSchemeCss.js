@@ -7,8 +7,8 @@
 // tab ID is injected by background script (CssAnalysis)
 /* globals MY_TAB_ID */
 
-const PREFER_COLOR_DARK = "(prefers-color-scheme: dark)";
-const PREFER_COLOR_LIGHT = "(prefers-color-scheme: light)";
+// from commons.js
+/* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
 
 const COMMUNICATE_INSERT_CSS = "insertCss";
 
@@ -55,7 +55,7 @@ function getCssForMediaQueryFunc(queryString) {
  * @param {string} queryString
  * @returns {string}
  */
-function getCssForMediaQuery(queryString) {
+function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-vars
     let cssRules = "";
     for (const styleSheet of document.styleSheets) {
         /* workaround for crazy HTML spec throwing an SecurityError here,
@@ -86,25 +86,34 @@ function getCssForMediaQuery(queryString) {
  * @function
  * @returns {void}
  */
-function applyDarkStyle() {
-    const darkCss = getCssForMediaQueryFunc(PREFER_COLOR_DARK);
-
-    // ignore, if no CSS is specified
-    if (!darkCss) {
+function applyWantedStyle() {
+    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
+        // well, do nothing
         return;
     }
 
-    console.log("got dark CSS", darkCss);
+    const wantedMediaQuery = MEDIA_QUERY_PREFER_COLOR[fakedColorStatus];
+    const wantedCss = getCssForMediaQueryFunc(wantedMediaQuery);
+
+    // ignore, if no CSS is specified
+    if (!wantedCss) {
+        return;
+    }
+
+    console.log("for status", fakedColorStatus,
+        ", with media query", wantedMediaQuery,
+        ", we've got:", wantedCss
+    );
 
     browser.runtime.sendMessage({
         type: COMMUNICATE_INSERT_CSS,
-        css: darkCss,
+        css: wantedCss,
         tabId: MY_TAB_ID
     }).then((...args) => {
         console.log("CSS message injected", args);
 
-        injectedCss = darkCss;
+        injectedCss = wantedCss;
     });
 }
 
-applyDarkStyle();
+applyWantedStyle();
