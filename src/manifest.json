@@ -22,15 +22,6 @@
     ]
   },
 
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content_scripts/applyDarkMode.js"],
-      "all_frames": true,
-      "match_about_blank": true
-    }
-  ],
-
   "options_ui": {
     "page": "options/options.html",
     "browser_style": true
@@ -51,7 +42,9 @@
   "default_locale": "en",
 
   "permissions": [
-    "storage"
+    "storage",
+    "tabs",
+    "<all_urls>"
   ],
 
   "applications": {
