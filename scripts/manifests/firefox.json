@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "short_name": "__MSG_extensionNameShort__",
-  "version": "0.1",
+  "version": "0.2",
   "author": "rugk",
 
   "description": "__MSG_extensionDescription__",
@@ -12,7 +12,14 @@
     "browser_style": true,
     "default_icon": "icons/icon-small-dark.svg",
     "default_title": "__MSG_browserActionButtonTitle__",
-    "default_popup": "options/options.html"
+    "default_popup": "options/options.html",
+    "theme_icons": [
+      {
+        "dark": "icons/icon-dark.svg",
+        "light": "icons/icon-light.svg",
+        "size": 32
+      }
+    ]
   },
 
   "content_scripts": [
@@ -40,6 +47,12 @@
   },
 
   "content_security_policy": "default-src 'self'",
+  "icons": {
+    "16": "icons/icon-dark.svg",
+    "32": "icons/icon-dark.svg",
+    "48": "icons/icon-dark.svg",
+    "96": "icons/icon-dark.svg"
+  },
   "default_locale": "en",
 
   "permissions": [
@@ -50,7 +63,7 @@
   "applications": {
     "gecko": {
       "id": "dark-mode-website-switcher@rugk.github.io",
-      "strict_min_version": "63.0a1"
+      "strict_min_version": "67.0a1"
     }
   }
 }
