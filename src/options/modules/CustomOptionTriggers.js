@@ -39,7 +39,7 @@ function applyFakedColorStatus(optionValue) {
 
     // show warning for rarely used values
     if (optionValue === "light" || optionValue === "no_preference") {
-        CommonMessages.showInfo("Due to the way most websites implement their styling, this option may not work on many websites.");
+        CommonMessages.showInfo("optionWarningRareStyleSetting");
     } else {
         CommonMessages.hideInfo();
     }
