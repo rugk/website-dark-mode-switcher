@@ -9,7 +9,7 @@
 
 This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS.
 
-It is inspired by …. This extension only works with modern Firefox v63 or higher.
+This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
 ## Download
 
