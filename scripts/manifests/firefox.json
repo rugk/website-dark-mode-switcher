@@ -10,7 +10,7 @@
 
   "browser_action": {
     "browser_style": true,
-    "default_icon": "icons/icon-small-dark.svg",
+    "default_icon": "icons/icon-dark.svg",
     "default_title": "__MSG_browserActionButtonTitle__",
     "default_popup": "options/options.html",
     "theme_icons": [
