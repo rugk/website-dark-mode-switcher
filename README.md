@@ -5,8 +5,6 @@
 [![Mozilla Add-on users](https://img.shields.io/amo/users/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/statistics/)
 [![Mozilla Add-on stars](https://img.shields.io/amo/stars/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/reviews/)
 
-<img height="200" width="200" src="assets/header.svg">
-
 This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS without requiring you to chnage the whole system style setting.
 
 Test websites:
@@ -19,14 +17,15 @@ This extension only works with modern Firefox v67 or higher, as this is the firs
 
 **[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-download)**
 
-## In action…
+## Proof of concept!
 
-![what shows this screencast description in alt text](assets/screencasts/someThing.gif)
+Note this is more or less only a proof-of-concept and may have flaws in real-world usage.
+If you just want to have dark pages (with a light system style), it will mostly™ work fine, but everything else is hardly possible. Also there may be edge-cases, where things break. (Feel free to report bugs, anyway. It's good to know what/if websites break.)
+For now, I do not really consider ever having a stable release of this add-on if Firefox does not get a proper API.
 
-See:
+The technical story on why this is so hard to overwrite CSS like that in an add-on [is described on Stackoverflow by me](https://stackoverflow.com/a/55910185/5008962), but basically I needed extract the CSS manually and manually apply it afterwards. And it requires an not-so-easy JS overwrite needed, too, BTW…
 
-* [More screencasts](assets/screencasts)
-* [More screenshots](assets/screenshots)
+That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1529323). Unless this happens, this add-on will likely never be stable and always have some things break.
 
 ## Features
 
