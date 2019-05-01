@@ -8,6 +8,15 @@
 
 let fakedColorStatus = null;
 
+// request and update setting as fast as possible
+browser.storage.sync.get("fakedColorStatus").then((settings) => {
+    // ATTENTION: hardcoded default value here!
+    const newSetting = settings.fakedColorStatus || "dark";
+
+    fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
+    // console.log("set fakedColorStatus via content script to:", fakedColorStatus);
+});
+
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
     LIGHT: Symbol("prefers-color-scheme: light"),
