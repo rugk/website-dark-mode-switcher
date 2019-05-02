@@ -127,3 +127,6 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
         injectedCss = wantedCss;
     });
 }
+
+// apply style when DOM content is loaded
+document.addEventListener("DOMContentLoaded", applyWantedStyle);

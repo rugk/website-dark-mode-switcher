@@ -21,20 +21,32 @@ async function enableSettingInjection() {
         matches: TAB_FILTER_URLS,
         js: [{
             code: `
-                // apply setting value
-                fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
-                console.log("updated fakedColorStatus via background script injection to", fakedColorStatus);
-                applyWantedStyle(); // call to apply CSS
-            `,
+                    // apply setting value
+                    fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
+                    console.log("updated fakedColorStatus via background script injection to", fakedColorStatus);
+                `,
         }],
         allFrames: true,
         matchAboutBlank: true,
         runAt: "document_start"
+    }).then(() => {
+        // apply CSS when website is really loaded
+        browser.contentScripts.register({
+            matches: TAB_FILTER_URLS,
+            js: [{
+                code: `
+                        applyWantedStyle("slow call"); // call to apply CSS
+                    `,
+            }],
+            allFrames: true,
+            matchAboutBlank: true,
+            runAt: "document_end" // run later, where all CSS should be loaded
+        });
     });
 }
 
 /**
- * Inserts a content script to finally trigger overwriting CSS.
+ * Manually trigger overwriting CSS.
  *
  * This requires the TAB_ID to be set before, so run {@link injectTabId} before!
  * Also requires the `fakedColorStatus` setting to be loaded, already.
@@ -65,21 +77,14 @@ export function init() {
     // inject current preloaded setting to all tabs, so we have it as fast as possible
     lastSettingsInjection = enableSettingInjection();
 
-    // trigger the CSS if we have the setting
-    browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
-        /*
-        only run additional injection if:
-            * the url is changed (when navigating to a new tab)
-            * the status is still loading (to exclude simple #anchor changes)
-        */
-        if ("url" in changeInfo && tabInfo.status === "loading") {
-            // obviously we also need to require the setting to be loaded, already
-            await lastSettingsInjection;
-            await triggerCssOverwrite(tabInfo);
-        }
-    }, {
-        urls: TAB_FILTER_URLS
-    });
+    // trigger CSS replace for existing tabs
+    browser.tabs.query({
+        url: TAB_FILTER_URLS
+    }).then((tabs) => {
+        return Promise.all(tabs.map(triggerCssOverwrite));
+    }).then(() => {
+        console.log("inserted content script into all pages");
+    }).catch(console.error);
 }
 
 // register update for setting
