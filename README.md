@@ -10,6 +10,7 @@ This is a (Firefox) add-on (WebExtension) that lets you invert the website's col
 Test websites:
 * https://stuffandnonsense.co.uk/blog/redesigning-your-product-and-website-for-dark-mode
 * https://webkit.org/
+* https://pinafore.social/
 
 This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
