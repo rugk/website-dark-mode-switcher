@@ -29,19 +29,6 @@ async function enableSettingInjection() {
         allFrames: true,
         matchAboutBlank: true,
         runAt: "document_start"
-    }).then(() => {
-        // apply CSS when website is really loaded
-        browser.contentScripts.register({
-            matches: TAB_FILTER_URLS,
-            js: [{
-                code: `
-                        applyWantedStyle("slow call"); // call to apply CSS
-                    `,
-            }],
-            allFrames: true,
-            matchAboutBlank: true,
-            runAt: "document_end" // run later, where all CSS should be loaded
-        });
     });
 }
 
