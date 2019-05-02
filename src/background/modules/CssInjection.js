@@ -10,8 +10,8 @@ import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunic
  * @param {function} sendResponse
  * @returns {void}
  */
-function insertCss(request) {
-    return browser.tabs.insertCSS(request.tabId, {
+function insertCss(request, sender) {
+    return browser.tabs.insertCSS(sender.tab.id, {
         allFrames: true,
         code: request.css,
         matchAboutBlank: true
@@ -29,8 +29,8 @@ function insertCss(request) {
  * @param {function} sendResponse
  * @returns {void}
  */
-function removeCSS(request) {
-    return browser.tabs.removeCSS(request.tabId, {
+function removeCSS(request, sender) {
+    return browser.tabs.removeCSS(sender.tab.id, {
         allFrames: true,
         code: request.css,
         matchAboutBlank: true

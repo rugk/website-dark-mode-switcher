@@ -4,9 +4,6 @@
 
 "use strict";
 
-// tab ID is injected by background script (CssAnalysis)
-/* globals MY_TAB_ID */
-
 // from commons.js
 /* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
 
@@ -95,8 +92,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
     if (injectedCss) {
         await browser.runtime.sendMessage({
             type: COMMUNICATE_REMOVE_CSS,
-            css: injectedCss,
-            tabId: MY_TAB_ID
+            css: injectedCss
         }).then((...args) => {
             console.log("old CSS removed", args);
 
@@ -124,8 +120,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
 
     browser.runtime.sendMessage({
         type: COMMUNICATE_INSERT_CSS,
-        css: wantedCss,
-        tabId: MY_TAB_ID
+        css: wantedCss
     }).then((...args) => {
         console.log("CSS message injected", args);
 

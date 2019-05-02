@@ -34,25 +34,6 @@ async function enableSettingInjection() {
 }
 
 /**
- * Inserts a content script setting the ID for each tab.
- *
- * @private
- * @param {Object} tab
- * @returns {Promise}
- */
-function injectTabId(tab) {
-    // inject pointer to let content script know in which tab
-    // it is running
-    return browser.tabs.executeScript(tab.id, {
-        code: `const MY_TAB_ID = ${tab.id}`,
-        allFrames: true,
-        runAt: "document_start"
-    }).then(() => {
-        console.log("injected tab ID into tab", tab.id, tab);
-    });
-}
-
-/**
  * Inserts a content script to finally trigger overwriting CSS.
  *
  * This requires the TAB_ID to be set before, so run {@link injectTabId} before!
@@ -84,15 +65,7 @@ export function init() {
     // inject current preloaded setting to all tabs, so we have it as fast as possible
     lastSettingsInjection = enableSettingInjection();
 
-    // inject in all tabs that we have permission for
-    browser.tabs.query({
-        url: TAB_FILTER_URLS
-    }).then((tabs) => {
-        return Promise.all(tabs.map(injectTabId));
-    }).then(() => {
-        console.log("inserted content script into all pages");
-    }).catch(console.error);
-
+    // trigger the CSS if we have the setting
     browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tabInfo) => {
         /*
         only run additional injection if:
@@ -100,7 +73,6 @@ export function init() {
             * the status is still loading (to exclude simple #anchor changes)
         */
         if ("url" in changeInfo && tabInfo.status === "loading") {
-            await injectTabId(tabInfo);
             // obviously we also need to require the setting to be loaded, already
             await lastSettingsInjection;
             await triggerCssOverwrite(tabInfo);

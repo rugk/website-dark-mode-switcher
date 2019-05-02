@@ -3,9 +3,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
 
-// tab ID is injected by background script (CssAnalysis)
-/* globals MY_TAB_ID */
-
+// should be set/overwritten very fast by manually registered content script
+// with more settings
 let fakedColorStatus = null;
 
 // request and update setting as fast as possible
