@@ -9,7 +9,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Allows you to do great stuff.",
+    "message": "Switches websites to the dark version, if they support it.",
     "description": "Description of the extension."
   },
   "browserActionButtonTitle": {
