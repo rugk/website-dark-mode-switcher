@@ -11,6 +11,8 @@ Test websites:
 * https://stuffandnonsense.co.uk/blog/redesigning-your-product-and-website-for-dark-mode
 * https://webkit.org/
 * https://pinafore.social/
+* https://s.codepen.io/aardrian/debug/NmoQdN
+* http://adrianroselli.com/
 
 This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
