@@ -14,6 +14,42 @@ const COMMUNICATE_REMOVE_CSS = "removeCss";
 let injectedCss = "";
 
 /**
+ * Filter a media query and discard irrelevant elements for our use case.
+ *
+ * E.g.:
+ * screen and (prefers-color-scheme: dark)
+ *
+ * @private
+ * @param {string} queryCondition
+ * @returns {string}
+ */
+function filterMediaQueryCond(queryCondition) {
+    const SPLITTER = [" and "];
+    const IGNORED_QUERIES = [
+        "screen", // obviously, we are on a screen
+        "all"
+    ];
+
+    let splitString;
+    SPLITTER.forEach((split) => {
+        splitString = queryCondition.split(split);
+
+        splitString = splitString.filter((element) => {
+            // also ignore useless "only" at beginning
+            if (element.startsWith("only ")) {
+                element = element.splice(5);
+            }
+
+            return !IGNORED_QUERIES.includes(element);
+        });
+
+        splitString = splitString.join(split);
+    });
+
+    return splitString;
+}
+
+/**
  * Return CSS from the website for a specific query string.
  *
  * (functional implementation)
@@ -35,7 +71,11 @@ function getCssForMediaQueryFunc(queryString) {
 
         return Array.from(styleSheet.cssRules).reduce((prev, cssRule) => {
             if (cssRule instanceof CSSMediaRule) {
-                if (cssRule.conditionText === queryString) {
+                const conditionQuery = cssRule.conditionText;
+
+                if (conditionQuery.includes(queryString) && // to avoid fast splitting/parsing, first check whether there is even a chance
+                    filterMediaQueryCond(conditionQuery) === queryString // check, whether we can take this query
+                ) {
                     return Array.from(cssRule.cssRules).reduce((prev, subCssRule) => {
                         return prev + subCssRule.cssText;
                     }, prev);
@@ -67,7 +107,7 @@ function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-var
 
         for (const cssRule of styleSheet.cssRules) {
             if (cssRule instanceof CSSMediaRule) {
-                if (cssRule.conditionText === queryString) {
+                if (filterMediaQueryCond(cssRule.conditionText) === queryString) {
                     for (const subCssRule of cssRule.cssRules) {
                         cssRules = cssRules + subCssRule.cssText;
                     }
