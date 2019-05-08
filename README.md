@@ -28,7 +28,7 @@ For now, I do not really consider ever having a stable release of this add-on if
 
 The technical story on why this is so hard to overwrite CSS like that in an add-on [is described on Stackoverflow by me](https://stackoverflow.com/a/55910185/5008962), but basically I needed extract the CSS manually and manually apply it afterwards. And it requires an not-so-easy JS overwrite needed, too, BTW…
 
-That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1529323). Unless this happens, this add-on will likely never be stable and always have some things break.
+That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818). Unless this happens, this add-on will likely never be stable and always have some things break.
 
 ## Features
 
