@@ -52,6 +52,16 @@
     "description": "The message shown, when the website style option is set to a rarely used value we cannot properly toggle/enforce."
   },
 
+  // badges
+  "badgeLight": {
+    "message": "🌕",
+    "description": "The badge text shown, when the style is set to a light. You usually shoulod not translate it. (You do not even need to copy it.)"
+  },
+  "badgeDark": {
+    "message": "🌑",
+    "description": "The badge text shown, when the style is set to a dark. You usually shoulod not translate it. (You do not even need to copy it.)"
+  },
+
   // options
   "someSettingsAreManaged": {
     "message": "Some settings are managed by your system administrator and cannot be changed.",
