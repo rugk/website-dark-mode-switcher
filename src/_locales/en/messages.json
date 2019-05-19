@@ -54,11 +54,11 @@
 
   // badges
   "badgeLight": {
-    "message": "🌕",
+    "message": "",
     "description": "The badge text shown, when the style is set to a light. You usually shoulod not translate it. (You do not even need to copy it.)"
   },
   "badgeDark": {
-    "message": "🌑",
+    "message": "🌔",
     "description": "The badge text shown, when the style is set to a dark. You usually shoulod not translate it. (You do not even need to copy it.)"
   },
 
