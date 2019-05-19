@@ -89,6 +89,7 @@ export async function init() {
 
         propagateNewSetting(fakedColorStatus);
         adjustUserIndicator(fakedColorStatus);
+        AddonSettings.set("fakedColorStatus", fakedColorStatus);
     });
     browser.browserAction.setBadgeTextColor({
         color: BADGE_COLOR
