@@ -1,6 +1,8 @@
 import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
+import * as CssAnalysis from "./CssAnalysis.js";
+
 const TAB_FILTER_URLS = ["http://*/*", "https://*/*"];
 
 const BADGE_BACKGROUND_COLOR = "rgba(48, 48, 48, 0)";
@@ -80,7 +82,7 @@ function propagateNewSetting(newColorSetting) {
 export async function init() {
     await loadOption();
 
-    browser.browserAction.onClicked.addListener(() => {
+    browser.browserAction.onClicked.addListener(async () => {
         if (fakedColorStatus === "dark") {
             fakedColorStatus = "no_overwrite";
         } else { // if = light
@@ -89,7 +91,8 @@ export async function init() {
 
         propagateNewSetting(fakedColorStatus);
         adjustUserIndicator(fakedColorStatus);
-        AddonSettings.set("fakedColorStatus", fakedColorStatus);
+        await AddonSettings.set("fakedColorStatus", fakedColorStatus);
+        CssAnalysis.triggerNewColorStatus();
     });
     browser.browserAction.setBadgeTextColor({
         color: BADGE_COLOR

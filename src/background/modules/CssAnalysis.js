@@ -8,6 +8,20 @@ let lastSettingsInjection = null;
 AddonSettings.setCaching(false);
 
 /**
+ * Triggers the new setting in case it has been changed.
+ *
+ * @public
+ * @returns {Promise}
+ */
+export async function triggerNewColorStatus() {
+    // add new code injection and remove old one
+    if (lastSettingsInjection) {
+        (await lastSettingsInjection).unregister();
+    }
+    lastSettingsInjection = enableSettingInjection();
+}
+
+/**
  * Adds a content script that is injected by Firefox and provides the preloaded
  * value of fakedColorStatus.
  *
@@ -75,12 +89,8 @@ export function init() {
 }
 
 // register update for setting
-BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, async (request) => {
+BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
     console.log("Received new fakedColorStatus setting:", request.fakedColorStatus);
 
-    // add new code injection and remove old one
-    if (lastSettingsInjection) {
-        (await lastSettingsInjection).unregister();
-    }
-    lastSettingsInjection = enableSettingInjection();
+    return triggerNewColorStatus();
 });
