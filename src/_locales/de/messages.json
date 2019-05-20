@@ -1,11 +1,11 @@
 {
   // manifest.json
   "extensionName": {
-    "message": "Dark Mode Website Switcher",
+    "message": "Dark Website Forcer",
     "description": "Name of the extension."
   },
   "extensionNameShort": {
-    "message": "Dark Mode Website Switcher",
+    "message": "Dark Website Forcer",
     "description": "Name of the extension."
   },
   "extensionDescription": {
@@ -13,7 +13,7 @@
     "description": "Description of the extension."
   },
   "browserActionButtonTitle": {
-    "message": "Dark Mode Website Switcher",
+    "message": "Dark Website Forcer",
     "description": "The title for the button, which opens the popup."
   },
 

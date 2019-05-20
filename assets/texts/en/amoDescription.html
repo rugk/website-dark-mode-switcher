@@ -1,18 +1,35 @@
-This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the <a href="https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme"><code style="font-family: Hack;">prefers-color-scheme</code></a> media feature of CSS without requiring you to chnage the whole system style setting.
-Test websites:
+This is an add-on that lets you invert the website's color scheme by inverting/changing the <a href="https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme</code></a> media feature of CSS without requiring you to change the whole system style setting.
+
+
+<b>⚠️ Important restrictions ⚠️</b>
+First, remember <b>it only works</b> if websites <b>specifically suport a dark mode</b>. Currently, these may not be so many websites, but you can request them to support it. The number of them supporting it will likely grow soon.
+
+Due to technical constraints, it can currently only <b>force websites to be dark</b>, not to be light. So when your system setting is set to have a dark style, this add-on currently cannot force the websites to be light anyway.
+Mozilla is being asked for a better API to change this. You can <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1547818">follow the request here</a>.
+
+This extension only works with Firefox v67 or higher, as this is the first Firefox version that supports this feature.
+
+
+<b>✍️ Usage ✍️</b>
+
+You can use a toolbar button to toggle whether it should force a dark mode or not. It displays a yellow moon icon, if it is enabled and forces the website to be dark.
+
+
+<b>⛱️ Test websites ⛱️</b>
+Here are some websites that already support the dark system style, so you can test them with this add-on:
 <ul>
 <li><a href="https://stuffandnonsense.co.uk/blog/redesigning-your-product-and-website-for-dark-mode">https://stuffandnonsense.co.uk/blog/redesigning-your-product-and-website-for-dark-mode</a></li>
 <li><a href="https://webkit.org/">https://webkit.org/</a></li>
 <li><a href="https://pinafore.social/">https://pinafore.social/</a></li>
+<li><a href="https://emojipedia.org/">https://emojipedia.org/</a></li>
 </ul>
 
-This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
-<b>Proof of concept!</b>
-Note this is more or less only a proof-of-concept and may have flaws in real-world usage.
-If you just want to have dark pages (with a light system style), it will mostly™ work fine, but everything else is hardly possible. Also there may be edge-cases, where things break. (Feel free to report bugs, anyway. It's good to know what/if websites break.)
-For now, I do not really consider ever having a stable release of this add-on if Firefox does not get a proper API.
-The technical story on why this is so hard to overwrite CSS like that in an add-on <a href="https://stackoverflow.com/a/55910185/5008962">is described on Stackoverflow by me</a>, but basically I needed extract the CSS manually and manually apply it afterwards. And it requires an not-so-easy JS overwrite needed, too, BTW…
-That's why I've requested a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1547818">better API on Bugzilla</a> (feel free to upvote, if you want this, too!). Unless this happens, this add-on will likely never be stable and always have some things break.
+<b>📝 Development 📝</b>
+The add-on is free/libre open-source software and developed on GitHub. <a href="https://github.com/rugk/website-dark-mode-switcher">Fork it on GitHub</a> and contribute.
+<a href="https://github.com/rugk/website-dark-mode-switcher/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">There are some easy issues to start with.</a>
 
-The code for this is <a href="https://github.com/rugk/website-dark-mode-switcher/">on GitHub</a>. Also report problems with websites there, please.
+
+<b>🗯️ Permissions 🗯️</b>
+This add-on requires as few permissions as possible.
+An explanation of all permissions, this add-on requests, can be found <a href="https://github.com/rugk/website-dark-mode-switcher/blob/master/assets/texts/en/permissions.md">on this site</a>.

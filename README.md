@@ -13,6 +13,7 @@ Test websites:
 * https://pinafore.social/
 * https://s.codepen.io/aardrian/debug/NmoQdN
 * http://adrianroselli.com/
+* https://emojipedia.org/
 
 This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
@@ -20,21 +21,14 @@ This extension only works with modern Firefox v67 or higher, as this is the firs
 
 **[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-download)**
 
-## Proof of concept!
+## Important limitations!
 
-Note this is more or less only a proof-of-concept and may have flaws in real-world usage.
-If you just want to have dark pages (with a light system style), it will mostly™ work fine, but everything else is hardly possible. Also there may be edge-cases, where things break. (Feel free to report bugs, anyway. It's good to know what/if websites break.)
-For now, I do not really consider ever having a stable release of this add-on if Firefox does not get a proper API.
+Note this is quite restricted in real-world usage.
+If you just want to have dark pages (with a light system style), it will usually work fine, but everything else is hardly possible. Also there may be edge-cases, where things break. (But please report bugs, anyway. It's good to know what/if websites break.)
+To improve this situation Firefox would need to get a proper API.
 
 The technical story on why this is so hard to overwrite CSS like that in an add-on [is described on Stackoverflow by me](https://stackoverflow.com/a/55910185/5008962), but basically I needed extract the CSS manually and manually apply it afterwards. And it requires an not-so-easy JS overwrite needed, too, BTW…
 
-That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818) (feel free to upvote, if you want this, too!). Unless this happens, this add-on will likely never be stable and always have some things break.
+That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818) (feel free to upvote, if you want this, too!).
 
-## Features
-
-* Puts your privacy first! Privacy is the default here.
-* Follows the [Firefox Photon Design](https://design.firefox.com/photon).
-* Has a simple, but intuitive and usable User Interface.
-* Translated in several languages already. [Contribute your own language!](CONTRIBUTING.md#Translations)
-* Compatible with Firefox for Android
-* […]
+For this reason, the add-on is currently named “**Dark Website Forcer**”. This makes it more obvious to the user, that it cannot _force_ a light website.
