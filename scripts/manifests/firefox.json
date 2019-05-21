@@ -37,11 +37,6 @@
     }
   ],
 
-  "options_ui": {
-    "page": "options/options.html",
-    "browser_style": true
-  },
-
   "background": {
     "page": "background/background.html"
   },
