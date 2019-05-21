@@ -1,1 +1,3 @@
-imageOne.png; "erstes Bild";
+disabled-light-mode.png; "So sieht deine Webseite aus, wenn das Add-on deaktiviert ist.";
+enabled-dark-style.png; "Ist das Add-on aktiviert, so erzwingt es einen dunklen Webseiten-Stil.";
+enabled-light-style.png; "Ist das Add-on aktiviert, so erzwingt es einen dunklen Webseiten-Stil, unabhängig von der System-Einstellung.";

@@ -1,1 +1,3 @@
-imageOne.png; "1st image";
+disabled-light-mode.png; "This is how your website looks, if the add-on is disabled.";
+enabled-dark-style.png; "If the add-on is enabled, it forces a dark style.";
+enabled-light-style.png; "If the add-on is enabled, it forces a dark style, independent of the system setting.";
