@@ -6,7 +6,8 @@ For a general explanation of add-on permission see [this support article](https:
 
 | Internal Id | Permission                     | Explanation                                                   |
 |:------------|:-------------------------------|:--------------------------------------------------------------|
-| `tabs`      | Read the text of all open tabs | Needed injecting the new (dark) style into all existing tabs. |
+| `<all_urls>` | Access your data for all websites | Needed injecting the new (dark) style into tabs. |
+| `tabs`      | Access browser tabs | Needed injecting the new (dark) style into all existing tabs. |
 
 ## Hidden permissions
 
@@ -15,4 +16,3 @@ Additionally it requests these permission, which are not requested in Firefox wh
 | Internal Id  | Permission                        | Explanation                                      |
 |:-------------|:----------------------------------|:-------------------------------------------------|
 | `storage`    | Access local storage              | Needed for saving options                        |
-| `<all_urls>` | Access your data for all websites | Needed injecting the new (dark) style into tabs. |

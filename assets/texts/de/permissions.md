@@ -6,7 +6,8 @@ Für eine allgemeine Erklärung von Add-on-Berechtigungen siehe [diesen Support-
 
 | Internal Id | Permission                                 | Explanation                                                                 |
 |:------------|:-------------------------------------------|:----------------------------------------------------------------------------|
-| `tabs`      | Auf Ihre Daten für alle Websites zugreifen | Benötigt, um das (dunkle) Design in die existierenden Webseiten einzufügen. |
+| `tabs`      |  Auf Browsertabs zugreifen | Benötigt, um das (dunkle) Design in die existierenden Webseiten einzufügen. |
+| `<all_urls>` | Auf Ihre Daten für alle Websites zugreifen | Benötigt, um das (dunkle) Design in die Webseiten einzufügen. |
 
 ## Versteckte Berechtigungen
 
@@ -15,4 +16,3 @@ Zusätzlich verlangt dieses Add-on folgende Berechtigungen, welche in Firefox ab
 | Interne ID   | Berechtigung                           | Erklärung                                                     |
 |:-------------|:---------------------------------------|:--------------------------------------------------------------|
 | `storage`    | Zugriff auf lokalen Speicher           | Benötigt um Einstellungen abzuspeichern                       |
-| `<all_urls>` | Auf Texte aller offenen Tabs zugreifen | Benötigt, um das (dunkle) Design in die Webseiten einzufügen. |
