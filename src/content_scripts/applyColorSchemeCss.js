@@ -5,7 +5,7 @@
 "use strict";
 
 // from commons.js
-/* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
 
 const COMMUNICATE_INSERT_CSS = "insertCss";
 const COMMUNICATE_REMOVE_CSS = "removeCss";
@@ -55,7 +55,7 @@ function filterMediaQueryCond(queryCondition) {
  * (functional implementation)
  *
  * @private
- * @param {string} queryString
+ * @param {RegEx} queryString
  * @returns {string}
  */
 function getCssForMediaQueryFunc(queryString) {
@@ -73,8 +73,8 @@ function getCssForMediaQueryFunc(queryString) {
             if (cssRule instanceof CSSMediaRule) {
                 const conditionQuery = cssRule.conditionText;
 
-                if (conditionQuery.includes(queryString) && // to avoid fast splitting/parsing, first check whether there is even a chance
-                    filterMediaQueryCond(conditionQuery) === queryString // check, whether we can take this query
+                if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid fast splitting/parsing, first check whether there is even a chance this has to do anything with what we want
+                    queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
                 ) {
                     return Array.from(cssRule.cssRules).reduce((prev, subCssRule) => {
                         return prev + subCssRule.cssText;
@@ -107,7 +107,11 @@ function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-var
 
         for (const cssRule of styleSheet.cssRules) {
             if (cssRule instanceof CSSMediaRule) {
-                if (filterMediaQueryCond(cssRule.conditionText) === queryString) {
+                const conditionQuery = cssRule.conditionText;
+
+                if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid fast splitting/parsing, first check whether there is even a chance this has to do anything with what we want
+                    queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
+                ) {
                     for (const subCssRule of cssRule.cssRules) {
                         cssRules = cssRules + subCssRule.cssText;
                     }

@@ -8,7 +8,7 @@ const overwroteMatchMedia = false;
 
 const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on website-dark-mode-switcher; see https://github.com/rugk/dark-mode-website-switcher/. If it causes any problems, please open an issue.";
 
-/* globals COLOR_STATUS, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction, cloneInto */
@@ -21,17 +21,22 @@ const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on web
  * @returns {COLOR_STATUS|null}
  */
 function getColorTypeFromMediaQuery(mediaQueryString) {
-    switch (mediaQueryString) {
-    case MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.LIGHT]:
+    // to avoid expensive RegEx, first use a simple check
+    if (!mediaQueryString.includes(MEDIA_QUERY_COLOR_SCHEME)) {
+        return null;
+    }
+
+    if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.LIGHT].test(mediaQueryString)) {
         return COLOR_STATUS.LIGHT;
-    case MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.DARK]:
+    } else if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.DARK].test(mediaQueryString)) {
         return COLOR_STATUS.DARK;
-    case MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.NO_PREFERENCE]:
+    } else if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.NO_PREFERENCE]) {
         return COLOR_STATUS.NO_PREFERENCE;
-    default:
+    } else {
         return null;
     }
 }
+
 /**
  * Returns a fake MediaQueryList as best as possible.
  *

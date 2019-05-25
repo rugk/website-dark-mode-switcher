@@ -23,10 +23,14 @@ const COLOR_STATUS = Object.freeze({
     NO_PREFERENCE: Symbol("prefers-color-scheme: no-preference"),
     NO_OVERWRITE: Symbol("add-on must not overwrite feature"),
 });
+
+const MEDIA_QUERY_COLOR_SCHEME = "prefers-color-scheme";
+
+// https://regex101.com/r/vfhdz3/1
 const MEDIA_QUERY_PREFER_COLOR = Object.freeze({
-    [COLOR_STATUS.LIGHT]: "(prefers-color-scheme: light)",
-    [COLOR_STATUS.DARK]: "(prefers-color-scheme: dark)",
-    [COLOR_STATUS.NO_PREFERENCE]: "(prefers-color-scheme: no-preference)",
+    [COLOR_STATUS.LIGHT]: /^\s*\(prefers-color-scheme:\s*light\)\s*$/,
+    [COLOR_STATUS.DARK]: /^\s*\(prefers-color-scheme:\s*dark\)\s*$/,
+    [COLOR_STATUS.NO_PREFERENCE]: /^\s*\(prefers-color-scheme:\s*no-preference\)\s*$/,
 });
 
 /**
