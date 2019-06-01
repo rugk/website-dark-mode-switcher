@@ -2,7 +2,7 @@ import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
 import * as BrowserCommunication from "/common/modules/BrowserCommunication/BrowserCommunication.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
-const TAB_FILTER_URLS = ["http://*/*", "https://*/*"];
+const TAB_FILTER_URLS = ["<all_urls>"];
 let lastSettingsInjection = null;
 
 AddonSettings.setCaching(false);

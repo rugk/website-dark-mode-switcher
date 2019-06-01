@@ -3,7 +3,7 @@ import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunic
 
 import * as CssAnalysis from "./CssAnalysis.js";
 
-const TAB_FILTER_URLS = ["http://*/*", "https://*/*"];
+const TAB_FILTER_URLS = ["<all_urls>"];
 
 const BADGE_BACKGROUND_COLOR = "rgba(48, 48, 48, 0)";
 const BADGE_COLOR = ""; // = "auto"
