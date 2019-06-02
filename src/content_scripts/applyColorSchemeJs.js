@@ -6,7 +6,7 @@
 
 const overwroteMatchMedia = false;
 
-const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on website-dark-mode-switcher; see https://github.com/rugk/dark-mode-website-switcher/. If it causes any problems, please open an issue.";
+const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
 
 /* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus */
 

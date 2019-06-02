@@ -6,7 +6,7 @@
   "author": "rugk",
 
   "description": "__MSG_extensionDescription__",
-  "homepage_url": "https://github.com/rugk/dark-mode-website-switcher/",
+  "homepage_url": "https://github.com/rugk/website-dark-mode-switcher/",
 
   "browser_action": {
     "browser_style": true,

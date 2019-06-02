@@ -1,6 +1,6 @@
 This add-on does not send any information to the add-on author or any third-party.
 
-An explanation of all permissions, this add-on requests, can be found at https://github.com/rugk/dark-mode-website-switcher/blob/master/assets/texts/en/permissions.md.
+An explanation of all permissions, this add-on requests, can be found at https://github.com/rugk/website-dark-mode-switcher/blob/master/assets/texts/en/permissions.md.
 
 == THIRD-PARTY SERVICES ==
 
