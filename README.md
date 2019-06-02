@@ -14,6 +14,7 @@ Test websites:
 * https://s.codepen.io/aardrian/debug/NmoQdN
 * http://adrianroselli.com/
 * https://emojipedia.org/
+* https://bugzilla.mozilla.org/
 
 This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
 
