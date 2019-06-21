@@ -8,8 +8,6 @@
 
 const NEW_SETTING = "newSetting";
 
-// TODO: dead code, currently
-
 /**
  * Process a message send by another part of the add-on.
  *
@@ -24,7 +22,6 @@ function processMessage(request) {
     }
 
     // adjust setting
-    console.log("Received new fakedColorStatus setting:", request.fakedColorStatus);
     fakedColorStatus = COLOR_STATUS[request.fakedColorStatus.toUpperCase()]; // eslint-disable-line no-unused-vars
 
     // trigger functions

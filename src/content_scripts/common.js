@@ -13,7 +13,6 @@ browser.storage.sync.get("fakedColorStatus").then((settings) => {
     const newSetting = settings.fakedColorStatus || "dark";
 
     fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
-    console.log("set fakedColorStatus via content script to:", fakedColorStatus);
 });
 
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
