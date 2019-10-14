@@ -37,7 +37,6 @@ async function enableSettingInjection() {
             code: `
                     // apply setting value
                     fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
-                    console.log("updated fakedColorStatus via background script injection to", fakedColorStatus);
                 `,
         }],
         allFrames: true,

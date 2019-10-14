@@ -138,7 +138,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
             type: COMMUNICATE_REMOVE_CSS,
             css: injectedCss
         }).then((...args) => {
-            console.log("old CSS removed", args);
+            console.log("website-dark-mode-switcher: old CSS removed", args);
 
             injectedCss = "";
         });
@@ -157,7 +157,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
         return;
     }
 
-    console.log("for status", fakedColorStatus,
+    console.log("website-dark-mode-switcher applied custom CSS; for status", fakedColorStatus,
         ", with media query", wantedMediaQuery,
         ", we've got:", wantedCss
     );
@@ -165,9 +165,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
     browser.runtime.sendMessage({
         type: COMMUNICATE_INSERT_CSS,
         css: wantedCss
-    }).then((...args) => {
-        console.log("CSS message injected", args);
-
+    }).then(() => {
         injectedCss = wantedCss;
     });
 }

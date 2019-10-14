@@ -1,11 +1,13 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Problem with a specific website
+about: Create a bug report for a problem on a specific website
 title: ''
-labels: bug
+labels: bug, site-issue
 assignees: ''
 
 ---
+
+**Affected website:** 
 
 ## Bug description
 <!-- A short summary of the issue. You can also explain how it affected you or explain some background of the story. -->
@@ -16,6 +18,9 @@ assignees: ''
 1. 
 2. 
 3. 
+
+### Screencast
+<!-- If you can record your steps that lead to the problem, please include a screencast (video of the steps) or, at least, a screenshot. -->
 
 ### Actual behavior
 <!-- The behavior you experienced. -->
@@ -31,4 +36,4 @@ Browser and version: Firefox
 Add-on version: 
 
 ## Possible solution
-<!-- Add references to other issues/docs/websites here or look into the code to find the potential causes of the problem or how to fix it. Omit this, if you don't know what to write here. -->
+<!-- Add references to other issues/docs/websites here or look into the code to find the potential causes of the problem or how to fix it. Potential exceptions or screenshots of some debugging breakpoints can also be useful. Just omit this, if you don't know what to write here. If you already know a complete solution, obviously do write it here. -->
