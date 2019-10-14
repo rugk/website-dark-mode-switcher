@@ -33,3 +33,13 @@ The technical story on why this is so hard to overwrite CSS like that in an add-
 That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818) (feel free to upvote, if you want this, too!).
 
 For this reason, the add-on is currently named “**Dark Website Forcer**”. This makes it more obvious to the user, that it cannot _force_ a light website.
+
+## Contribute
+
+You can easily get involved in this FLOSS project and any help is certainly appreciated. Here are some ideas:
+
+* 📃 [Translate this add-on into multiple languages!](./CONTRIBUTING.md#translations)
+* 🐛 [Fix some easy issues and get started in add-on development](CONTRIBUTING.md#coding) (or try out a development version)
+* 💡 [Or check out some other add-on issues](CONTRIBUTING.md#need-ideas) (or translate them).
+
+Or, in any case, [support us by spreading the word!](./CONTRIBUTING.md#support-us) ❤️
