@@ -12,7 +12,7 @@ You like this add-on, but have no idea how to support us?
 Here are some easy things you can always do:
 
 * Spread the word and recommend it to others! 🤗😍
-* Leave a rating [at addons.mozilla.org](https://addons.mozilla.org/de/firefox/addon/dark-mode-website-switcher/reviews/) if you like it!
+* Leave a rating [at addons.mozilla.org](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/reviews/) if you like it!
   Also consider writing some text and not only leaving stars there. It's always nice to hear some warm words. ☺️
 * Star this project [on GitHub](https://github.com/rugk/website-dark-mode-switcher) by clicking the "star" icon!
 
