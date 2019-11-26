@@ -12,6 +12,8 @@ const COMMUNICATE_REMOVE_CSS = "removeCss";
 
 // need to save injected CSS, so we can remove it later
 let injectedCss = "";
+// placeholder variable for if the style has failed
+let applyStyleFailed = false;
 
 /**
  * Filter a media query and discard irrelevant elements for our use case.
@@ -138,7 +140,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
             type: COMMUNICATE_REMOVE_CSS,
             css: injectedCss
         }).then((...args) => {
-            console.log("website-dark-mode-switcher: old CSS removed", args);
+            console.info("website-dark-mode-switcher: old CSS removed", args);
 
             injectedCss = "";
         });
@@ -154,10 +156,11 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
 
     // ignore, if no CSS is specified
     if (!wantedCss) {
+        applyStyleFailed = true;
         return;
     }
 
-    console.log("website-dark-mode-switcher applied custom CSS; for status", fakedColorStatus,
+    console.info("website-dark-mode-switcher applied custom CSS; for status", fakedColorStatus,
         ", with media query", wantedMediaQuery,
         ", we've got:", wantedCss
     );
@@ -170,5 +173,22 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
     });
 }
 
+/**
+ * Apply style again if it has failed.
+ *
+ * Will be triggered on document load if the initial
+ * DOMContentLoad fails.
+ *
+ * @function
+ * @returns {void}
+ */
+function applyStyleOnFail() {
+    if (applyStyleFailed) {
+        applyWantedStyle();
+    }
+}
+
 // apply style when DOM content is loaded
 document.addEventListener("DOMContentLoaded", applyWantedStyle);
+// apply style when content is fully loaded
+window.addEventListener("load", applyStyleOnFail);

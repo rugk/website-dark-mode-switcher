@@ -94,7 +94,7 @@ function matchMediaOverwrite(...args) {
     case COLOR_STATUS.LIGHT:
     case COLOR_STATUS.NO_PREFERENCE: {
         const realColorStatus = getSystemMediaStatus();
-        console.log(
+        console.info(
             "Real media query result: ", realColorStatus, ".",
             "We fake it to appear like: ", fakedColorStatus, ".",
             ADDON_FAKED_WARNING

@@ -63,7 +63,7 @@ function triggerCssOverwrite(tab) {
         allFrames: true,
         runAt: "document_end" // run later, where all CSS should be loaded
     }).then(() => {
-        console.log("triggered CSS analysis/overwrite for tab", tab.id, tab);
+        console.info("triggered CSS analysis/overwrite for tab", tab.id, tab);
     });
 }
 
@@ -83,13 +83,13 @@ export function init() {
     }).then((tabs) => {
         return Promise.all(tabs.map(triggerCssOverwrite));
     }).then(() => {
-        console.log("inserted content script into all pages");
+        console.info("inserted content script into all pages");
     }).catch(console.error);
 }
 
 // register update for setting
 BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
-    console.log("Received new fakedColorStatus setting:", request.fakedColorStatus);
+    console.info("Received new fakedColorStatus setting:", request.fakedColorStatus);
 
     return triggerNewColorStatus();
 });
