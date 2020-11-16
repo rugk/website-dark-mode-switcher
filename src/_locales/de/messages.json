@@ -16,6 +16,10 @@
     "message": "Dark Website Forcer",
     "description": "The title for the button, which opens the popup."
   },
+  "commandToggleDarkMode": {
+    "message": "Erzwingen des dunklen Modi umschalten",
+    "description": "Description of the hot key command to toggle the dark mode just like clicking on the browser action (by default with Ctrl+Shift+B)."
+  },
 
   // errors or other messages (mostly for settings)
   "errorShowingMessage": {

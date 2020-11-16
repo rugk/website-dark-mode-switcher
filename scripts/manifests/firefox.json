@@ -40,6 +40,15 @@
     "page": "background/background.html"
   },
 
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B"
+      },
+      "description": "__MSG_commandToggleDarkMode__"
+    }
+  },
+
   "content_security_policy": "default-src 'self'",
   "icons": {
     "16": "icons/icon-dark.svg",

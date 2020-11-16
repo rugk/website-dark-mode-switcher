@@ -45,6 +45,15 @@
     "page": "background/background.html"
   },
 
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B"
+      },
+      "description": "__MSG_commandToggleDarkMode__"
+    }
+  },
+
   // testing version allows loading unit test libraries from CDNs
   "content_security_policy": "default-src 'self'; img-src data:; style-src 'self' https://unpkg.com; script-src 'self' https://unpkg.com",
   "icons": {
