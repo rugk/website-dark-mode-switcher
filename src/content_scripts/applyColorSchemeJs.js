@@ -86,8 +86,14 @@ function fakeMediaQueryResult(mediaQueryString, askedFor) {
  * @see {@link https://developer.mozilla.org/docs/Web/API/Window/matchMedia}
  */
 function matchMediaOverwrite(...args) {
-    const mediaQueryString = args[0];
-    const requestedMedia = getColorTypeFromMediaQuery(mediaQueryString);
+    let mediaQueryString, requestedMedia;
+    try {
+        const mediaQueryString = args[0];
+        requestedMedia = getColorTypeFromMediaQuery(mediaQueryString);
+    } catch (e) {
+        // ignore errors and run the real browser function at the bottom
+        requestedMedia = null;
+    }
 
     switch (requestedMedia) {
     case COLOR_STATUS.DARK:
@@ -107,7 +113,7 @@ function matchMediaOverwrite(...args) {
             break;
         }
 
-        // faking media queries is hard, and we can only a fake object
+        // faking media queries is hard, and we can only return a fake object
         const fakeResult = fakeMediaQueryResult(mediaQueryString, requestedMedia);
         return cloneInto(
             fakeResult,
