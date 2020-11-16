@@ -16,7 +16,7 @@ function insertCss(request, sender) {
         code: request.css,
         matchAboutBlank: true
     }).then((...args) => {
-        console.info("injection worked", args, request);
+        console.info("tab", sender.tab.id, sender.url, "injection worked", args, request);
     });
 }
 
@@ -35,7 +35,7 @@ function removeCSS(request, sender) {
         code: request.css,
         matchAboutBlank: true
     }).then((...args) => {
-        console.info("injection reverted (css removed)", args, request);
+        console.info("tab", sender.tab.id, sender.url, "injection reverted (css removed)", args, request);
     });
 }
 
