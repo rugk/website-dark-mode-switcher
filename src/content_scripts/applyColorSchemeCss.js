@@ -58,46 +58,65 @@ function filterMediaQueryCond(queryCondition) {
  *
  * @private
  * @param {RegEx} queryString
+ * @param {StyleSheet} [stylesheet=document.styleSheets] add a custom StyleSheet if you want to parse a different one
+ * @param {string} [previousText]
  * @returns {string}
  */
-function getCssForMediaQueryFunc(queryString) {
-    return Array.from(document.styleSheets).reduce((prev, styleSheet) => {
-        /* workaround for crazy HTML spec throwing an SecurityError here,
-         * see https://discourse.mozilla.org/t/accessing-some-fonts-css-style-sheet-via-stylesheet/38717?u=rugkx
-         * and https://stackoverflow.com/questions/21642277/security-error-the-operation-is-insecure-in-firefox-document-stylesheets */
-        try {
-            styleSheet.cssRules; // eslint-disable-line no-unused-expressions
-        } catch (e) {
-            return prev;
-        }
+function getCssForMediaQueryFunc(queryString, stylesheet = document.styleSheets, previousText = "") {
+    // eslint bug, see https://github.com/eslint/eslint/issues/13855
+    return Array.from(stylesheet).reduce((previousText, styleSheet) => {
+        return Array.from(styleSheet.cssRules).reduce((previousText, cssRule) => {
+            return parseCssMediaRuleFunc(cssRule, queryString, previousText);
+        }, previousText);
+    }, previousText);
+}
 
-        return Array.from(styleSheet.cssRules).reduce((prev, cssRule) => {
-            if (cssRule instanceof CSSMediaRule) {
-                const conditionQuery = cssRule.conditionText;
+/**
+ * Parses one single CSS media rule and looks for.
+ *
+ * (functional implementation)
+ *
+ * @private
+ * @param {CSSMediaRule} cssRule
+ * @param {string} queryString
+ * @param {string} previousText
+ * @returns {string}
+ */
+function parseCssMediaRuleFunc(cssRule, queryString, previousText) {
+    // recursively import/iterate imported stylesheets
+    if (cssRule instanceof CSSImportRule) {
+        return getCssForMediaQueryFunc(queryString, [ cssRule.styleSheet ]);
+    }
+    if (!(cssRule instanceof CSSMediaRule)) {
+        return previousText;
+    }
 
-                if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid fast splitting/parsing, first check whether there is even a chance this has to do anything with what we want
-                    queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
-                ) {
-                    return Array.from(cssRule.cssRules).reduce((prev, subCssRule) => {
-                        return prev + subCssRule.cssText;
-                    }, prev);
-                }
-            }
-            return prev;
-        }, prev);
-    }, "");
+    // evaluate "usual" CSS conditions
+    const conditionQuery = cssRule.conditionText;
+
+    if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid fast splitting/parsing, first check whether there is even a chance this has to do anything with what we want
+        queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
+    ) {
+        return Array.from(cssRule.cssRules).reduce((previousText, subCssRule) => {
+            return previousText + subCssRule.cssText;
+        }, previousText);
+    }
+    return previousText;
 }
 
 /**
  * Return CSS from the website for a specific query string.
  *
+ * LESS TESTED(!) as we use the functional version!
+ *
  * @private
  * @param {string} queryString
+ * @param {StyleSheet} [stylesheet=document.styleSheets] add a custom StyleSheet if you want to parse a different one
  * @returns {string}
  */
-function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-vars
+function getCssForMediaQuery(queryString, stylesheet = document.styleSheets) {
     let cssRules = "";
-    for (const styleSheet of document.styleSheets) {
+    for (const styleSheet of stylesheet) {
         /* workaround for crazy HTML spec throwing an SecurityError here,
          * see https://discourse.mozilla.org/t/accessing-some-fonts-css-style-sheet-via-stylesheet/38717?u=rugkx
          * and https://stackoverflow.com/questions/21642277/security-error-the-operation-is-insecure-in-firefox-document-stylesheets */
@@ -108,17 +127,40 @@ function getCssForMediaQuery(queryString) { // eslint-disable-line no-unused-var
         }
 
         for (const cssRule of styleSheet.cssRules) {
-            if (cssRule instanceof CSSMediaRule) {
-                const conditionQuery = cssRule.conditionText;
+            cssRules += parseCssMediaRule(cssRule, queryString);
+        }
+    }
+    return cssRules;
+}
 
-                if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid fast splitting/parsing, first check whether there is even a chance this has to do anything with what we want
-                    queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
-                ) {
-                    for (const subCssRule of cssRule.cssRules) {
-                        cssRules = cssRules + subCssRule.cssText;
-                    }
-                }
-            }
+/**
+ * Parses one single CSS media rule and looks for
+ *
+ * LESS TESTED(!) as we use the functional version!
+ *
+ * @private
+ * @param {CSSMediaRule} cssRule
+ * @param {string} queryString
+ * @returns {string}
+ */
+function parseCssMediaRule(cssRule, queryString) {
+    // recursively import/iterate imported stylesheets
+    if (cssRule instanceof CSSImportRule) {
+        return getCssForMediaQuery(queryString, [ cssRule.styleSheet ]);
+    }
+    if (!(cssRule instanceof CSSMediaRule)) {
+        return "";
+    }
+    let cssRules = "";
+
+    // evaluate "usual" CSS conditions
+    const conditionQuery = cssRule.conditionText;
+
+    if (conditionQuery.includes(MEDIA_QUERY_COLOR_SCHEME) && // to avoid slow splitting/parsing, first check whether there is even a chance this has to do anything with what we want
+        queryString.test(filterMediaQueryCond(conditionQuery)) // check, whether we can take this query
+    ) {
+        for (const subCssRule of cssRule.cssRules) {
+            cssRules += subCssRule.cssText;
         }
     }
     return cssRules;
