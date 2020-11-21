@@ -51,6 +51,10 @@
     "description": "The message shown, when the options of the settings could not have been reset."
   },
 
+  "warningAdvancedSettings": {
+    "message": "Achtung: Dies sind erweiterte Einstellungen und sollten nur geändert werden, wenn du weist, was du tust! Im Fehlerfall bitte die Änderungen zurücksetzen.",
+    "description": "The message shown in the options discouraging the user from changing the settings."
+  },
   "optionWarningRareStyleSetting": {
     "message": "Durch die Art wie die meisten Webseiten funktionieren, wird diese Option wahrscheinlich auf vielen Webseiten nicht funktionieren.",
     "description": "The message shown, when the website style option is set to a rarely used value we cannot properly toggle/enforce."
@@ -93,6 +97,15 @@
   "optionsWebsiteStyleSystem": {
     "message": "System (nicht überschreiben)",
     "description": "The add-on option for optionsWebsiteStyle. It basically just disables the add-on."
+  },
+
+  "optionFunctionalMode": {
+    "message": "Benutze die funktionale Implementierung um die Stylesheets zu parsen.",
+    "description": "The add-on option for optionFunctionalMode. It changes the way the add-on works internally."
+  },
+  "optionFunctionalModeDescr": {
+    "message": "Diese Option ändert die internen CSS-Abarbeitungsmethode für die Webseiten. Es wird aktuell nicht empfohlen sie zu verwenden, da die funktionale Implementierung aufgrund von Arbeitsspeicherbeschränkungen nicht auf allen Seiten funktionieren könnte.",
+    "description": "The add-on option description for optionFunctionalMode. It should discourage changing the option."
   },
 
   // ARIA labels/descriptions

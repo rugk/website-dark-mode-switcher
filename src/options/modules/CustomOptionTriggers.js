@@ -55,6 +55,7 @@ function applyFakedColorStatus(optionValue) {
  */
 export function registerTrigger() {
     AutomaticSettings.Trigger.registerSave("fakedColorStatus", applyFakedColorStatus);
+    AutomaticSettings.Trigger.registerSave("functionalMode", applyFakedColorStatus);
 
     // handle loading of options correctly
     AutomaticSettings.Trigger.registerAfterLoad(AutomaticSettings.Trigger.RUN_ALL_SAVE_TRIGGER);

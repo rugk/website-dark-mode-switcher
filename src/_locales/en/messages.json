@@ -55,6 +55,10 @@
     "message": "Due to the way most websites implement their styling, this option may not work on many websites.",
     "description": "The message shown, when the website style option is set to a rarely used value we cannot properly toggle/enforce."
   },
+  "warningAdvancedSettings": {
+    "message": "Attention: These are advanced settings and should only be changed if you know what you are doing! In case of error, please reset the changes.",
+    "description": "The message shown in the options discouraging the user from changing the settings."
+  },
 
   // badges
   "badgeLight": {
@@ -103,6 +107,15 @@
   "optionsWebsiteStyleSystem": {
     "message": "System (do not overwrite)",
     "description": "The add-on option for optionsWebsiteStyle. It basically just disables the add-on."
+  },
+
+  "optionFunctionalMode": {
+    "message": "Use the functional implementation for parsing style sheets.",
+    "description": "The add-on option for optionFunctionalMode. It changes the way the add-on works internally."
+  },
+  "optionFunctionalModeDescr": {
+    "message": "This option changes the internal CSS processing method for the websites. It is currently not recommened to use, as the functional implementation may not work on some sites due to memory constraints. Only change it for debugging.",
+    "description": "The add-on option description for optionFunctionalMode. It should discourage changing the option."
   },
 
   // ARIA labels/descriptions

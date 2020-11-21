@@ -30,6 +30,7 @@ export async function triggerNewColorStatus() {
  */
 async function enableSettingInjection() {
     const fakedColorStatus = await AddonSettings.get("fakedColorStatus");
+    const functionalMode = await AddonSettings.get("functionalMode");
 
     return browser.contentScripts.register({
         matches: TAB_FILTER_URLS,
@@ -37,6 +38,7 @@ async function enableSettingInjection() {
             code: `
                     // apply setting value
                     fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
+                    functionalMode = ${functionalMode}
                 `,
         }],
         allFrames: true,

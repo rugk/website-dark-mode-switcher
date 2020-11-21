@@ -5,7 +5,9 @@
 "use strict";
 
 // from commons.js
-/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR */
+// settings injection
+/* globals fakedColorStatus, functionalMode */
 
 const COMMUNICATE_INSERT_CSS = "insertCss";
 const COMMUNICATE_REMOVE_CSS = "removeCss";
@@ -193,7 +195,12 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
     }
 
     const wantedMediaQuery = MEDIA_QUERY_PREFER_COLOR[fakedColorStatus];
-    const wantedCss = getCssForMediaQuery(wantedMediaQuery);
+    let wantedCss;
+    if (functionalMode) {
+        wantedCss = getCssForMediaQueryFunc(wantedMediaQuery);
+    } else {
+        wantedCss = getCssForMediaQuery(wantedMediaQuery);
+    }
 
     // ignore, if no CSS is specified
     if (!wantedCss) {

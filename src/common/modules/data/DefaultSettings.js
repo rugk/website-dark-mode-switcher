@@ -6,4 +6,5 @@
 
 export const DEFAULT_SETTINGS = Object.freeze({
     fakedColorStatus: "dark",
+    functionalMode: false
 });
