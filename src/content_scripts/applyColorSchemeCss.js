@@ -63,7 +63,6 @@ function filterMediaQueryCond(queryCondition) {
  * @returns {string}
  */
 function getCssForMediaQueryFunc(queryString, stylesheet = document.styleSheets, previousText = "") {
-    // eslint bug, see https://github.com/eslint/eslint/issues/13855
     return Array.from(stylesheet).reduce((previousText, styleSheet) => {
         return Array.from(styleSheet.cssRules).reduce((previousText, cssRule) => {
             return parseCssMediaRuleFunc(cssRule, queryString, previousText);
@@ -85,7 +84,7 @@ function getCssForMediaQueryFunc(queryString, stylesheet = document.styleSheets,
 function parseCssMediaRuleFunc(cssRule, queryString, previousText) {
     // recursively import/iterate imported stylesheets
     if (cssRule instanceof CSSImportRule) {
-        return getCssForMediaQueryFunc(queryString, [ cssRule.styleSheet ]);
+        return getCssForMediaQueryFunc(queryString, [ cssRule.styleSheet ], previousText);
     }
     if (!(cssRule instanceof CSSMediaRule)) {
         return previousText;
@@ -194,7 +193,7 @@ async function applyWantedStyle() { // eslint-disable-line no-unused-vars
     }
 
     const wantedMediaQuery = MEDIA_QUERY_PREFER_COLOR[fakedColorStatus];
-    const wantedCss = getCssForMediaQueryFunc(wantedMediaQuery);
+    const wantedCss = getCssForMediaQuery(wantedMediaQuery);
 
     // ignore, if no CSS is specified
     if (!wantedCss) {
