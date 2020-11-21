@@ -88,6 +88,15 @@
     "description": "The button to delete all current settings and load the defaults, shown in the add-on settings."
   },
 
+  "titleInstructions": {
+    "message": "Instructions",
+    "description": "The title for a settings group."
+  },
+  "titleAdvancedOptions": {
+    "message": "Advanced options",
+    "description": "The title for a settings group."
+  },
+
   "optionsWebsiteStyle": {
     "message": "Website style:",
     "description": "An add-on option."
@@ -116,6 +125,44 @@
   "optionFunctionalModeDescr": {
     "message": "This option changes the internal CSS processing method for the websites. It is currently not recommened to use, as the functional implementation may not work on some sites due to memory constraints. Only change it for debugging.",
     "description": "The add-on option description for optionFunctionalMode. It should discourage changing the option."
+  },
+
+  "translatorCredit": {
+    "message": "This add-on has been translated into English by $TRANSLATORS$.",
+    "description": "The credit text for the translator. See https://github.com/TinyWebEx/common/blob/master/CONTRIBUTING.md#translator-credit-inside-of-add-on for how to translate this.",
+    "placeholders": {
+      "translators": {
+        "content": "$1",
+        "example": "<a href=\"https://github.com/rugk/\">@rugk</a>"
+      }
+    }
+  },
+  "translatorLink": {
+    "message": "https://github.com/rugk",
+    "description": "The link to the translator's GitHub profile."
+  },
+  "translatorUsername": {
+    "message": "rugk",
+    "description": "The username that the translator wants to be referred to."
+  },
+
+  "contributorsThanks": {
+    "message": "Also thanks to $CONTRIBUTORS$.",
+    "description": "Text thanking all contributors and linking to the contributors file.",
+    "placeholders": {
+      "contributors": {
+        "content": "$1",
+        "example": "<a href=\"https://github.com/rugk/…/CONTRIBUTORS.md\">all other contributors</a>"
+      }
+    }
+  },
+  "contributorsThanksLink": {
+    "message": "https://github.com/rugk/website-dark-mode-switcher/blob/master/CONTRIBUTORS.md",
+    "description": "The link to the CONTRIBUTORS file."
+  },
+  "contributorsThanksLinkText": {
+    "message": "all other contributors",
+    "description": "The link text linking to the contributors file. See contributorsThanks."
   },
 
   // ARIA labels/descriptions
