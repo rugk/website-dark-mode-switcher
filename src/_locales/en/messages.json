@@ -97,6 +97,33 @@
     "description": "The title for a settings group."
   },
 
+  "settingIntroHelp": {
+    "message": "To enable and disable the add-on and turn a website into dark or the default settings, please click on the toolbar icon of this extension or use the hot key (configurable in the extension shortcut configuration of Firefox). Note that in some cases you may need to reload the site.",
+    "description": "A description in the settings explaining the usage of the add-on."
+  },
+  "devToolsHint": {
+    "message": "Note that if you are a developer you may also enable $LINK$ for testing websites.",
+    "description": "A description in the settings giving a hint to developers for an about:config preference that enables them to toggle the dark mode there.",
+    "placeholders": {
+      "link": {
+        "content": "$1",
+        "example": "<a href=\"https://stackoverflow.com/q/56401662/5008962\">a hidden Firefox preference</a>"
+      }
+    }
+  },
+  "devToolsHintLink": {
+    "message": "https://stackoverflow.com/q/56401662/5008962",
+    "description": "The link to a useful ressource that explains how to activate and use the color-scheme dev-tool component of Firefox."
+  },
+  "devToolsHintLinkText": {
+    "message": "a hidden Firefox preference",
+    "description": "The link text for the link given in devToolsHintLink. Make sure it fits into the sentence. Please make the reader aware of the link is in foreign language."
+  },
+  "settingIntroHelpRestrictions": {
+    "message": "Please be aware that this extension only works on websites that support the dark styling. In addition, it usually cannot force the light mode of a website and thus only works if the system setting is set to “dark”.",
+    "description": "A description in the settings explaining the restrictions of the add-on."
+  },
+
   "optionsWebsiteStyle": {
     "message": "Website style:",
     "description": "An add-on option."
