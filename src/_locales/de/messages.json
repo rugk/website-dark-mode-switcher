@@ -136,11 +136,11 @@
   },
 
   "optionFunctionalMode": {
-    "message": "Benutze die funktionale Implementierung um die Stylesheets zu parsen.",
+    "message": "Benutze die funktionale Implementierung, um die Stylesheets zu parsen.",
     "description": "The add-on option for optionFunctionalMode. It changes the way the add-on works internally."
   },
   "optionFunctionalModeDescr": {
-    "message": "Diese Option ändert die internen CSS-Abarbeitungsmethode für die Webseiten. Es wird aktuell nicht empfohlen sie zu verwenden, da die funktionale Implementierung aufgrund von Arbeitsspeicherbeschränkungen nicht auf allen Seiten funktionieren könnte.",
+    "message": "Diese Option ändert die interne CSS-Abarbeitungsmethode für die Webseiten. Es wird aktuell nicht empfohlen sie zu verwenden, da die funktionale Implementierung aufgrund von Arbeitsspeicherbeschränkungen nicht auf allen Seiten funktionieren könnte.",
     "description": "The add-on option description for optionFunctionalMode. It should discourage changing the option."
   },
 
