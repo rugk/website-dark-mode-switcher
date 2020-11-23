@@ -43,3 +43,5 @@ You can easily get involved in this FLOSS project and any help is certainly appr
 * 💡 [Or check out some other add-on issues](CONTRIBUTING.md#need-ideas) (or translate them).
 
 Or, in any case, [support us by spreading the word!](./CONTRIBUTING.md#support-us) ❤️
+
+If you want to find out how this add-on currently works on a technical level, [have a look at this Stackoverflow answer](https://stackoverflow.com/a/55910185/5008962). I've explained it there in detail.
