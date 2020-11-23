@@ -2,7 +2,7 @@
 
 [![Mozilla Add-on version](https://img.shields.io/amo/v/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-shield-downloads)  
 [![Mozilla Add-on downloads](https://img.shields.io/amo/d/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-shield-downloads)
-[![Mozilla Add-on users](https://img.shields.io/amo/users/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/statistics/)
+[![Mozilla Add-on users](https://img.shields.io/amo/users/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/)
 [![Mozilla Add-on stars](https://img.shields.io/amo/stars/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/reviews/)
 
 This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS without requiring you to change the whole system style setting.
