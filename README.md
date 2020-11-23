@@ -1,9 +1,9 @@
 # Dark Mode Website Switcher <img align="right" height="200" width="200" src="src/icons/icon-dark.svg">
 
-[![Mozilla Add-on version](https://img.shields.io/amo/v/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-shield-downloads)  
-[![Mozilla Add-on downloads](https://img.shields.io/amo/d/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-shield-downloads)
-[![Mozilla Add-on users](https://img.shields.io/amo/users/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/)
-[![Mozilla Add-on stars](https://img.shields.io/amo/stars/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/reviews/)
+[![Mozilla Add-on version](https://img.shields.io/amo/v/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=badge-version&campaign=github)  
+[![Mozilla Add-on downloads](https://img.shields.io/amo/d/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=badge-downloads&campaign=github)
+[![Mozilla Add-on users](https://img.shields.io/amo/users/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=badge-users&campaign=github)
+[![Mozilla Add-on stars](https://img.shields.io/amo/stars/dark-mode-website-switcher.svg)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/reviews/?utm_source=github.com&utm_medium=git&utm_content=badge-stars&campaign=github)
 
 This is a (Firefox) add-on (WebExtension) that lets you invert the website's color scheme by inverting/changing the [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme) media feature of CSS without requiring you to change the whole system style setting.
 
@@ -20,7 +20,7 @@ This extension only works with modern Firefox v67 or higher, as this is the firs
 
 ## Download
 
-**[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?src=external-github-download)**
+**[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=download-button&campaign=github)**
 
 ## Important limitations!
 
