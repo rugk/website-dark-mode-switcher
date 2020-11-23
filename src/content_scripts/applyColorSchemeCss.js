@@ -108,8 +108,6 @@ function parseCssMediaRuleFunc(cssRule, queryString, previousText) {
 /**
  * Return CSS from the website for a specific query string.
  *
- * LESS TESTED(!) as we use the functional version!
- *
  * @private
  * @param {string} queryString
  * @param {StyleSheet} [stylesheet=document.styleSheets] add a custom StyleSheet if you want to parse a different one
@@ -135,9 +133,7 @@ function getCssForMediaQuery(queryString, stylesheet = document.styleSheets) {
 }
 
 /**
- * Parses one single CSS media rule and looks for
- *
- * LESS TESTED(!) as we use the functional version!
+ * Parses one single CSS media rule and looks for the given query string.
  *
  * @private
  * @param {CSSMediaRule} cssRule
