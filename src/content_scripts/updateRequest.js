@@ -1,12 +1,14 @@
 "use strict";
 
 /* eslint-disable no-global-assign */
-/* globals fakedColorStatus */ // eslint-disable-line no-unused-vars
+// settings injection
+/* globals fakedColorStatus, functionalMode */ // eslint-disable-line no-unused-vars
 
 // other parts of add-on
 /* globals COLOR_STATUS, applyJsOverwrite, applyWantedStyle */
 
 const NEW_SETTING = "newSetting";
+const NEW_SETTING_ADDITIONAL = "newSettingAdditional";
 
 /**
  * Process a message send by another part of the add-on.
@@ -16,17 +18,24 @@ const NEW_SETTING = "newSetting";
  * @returns {void}
  */
 function processMessage(request) {
-    // ignore unrelated requests
-    if (request.type !== NEW_SETTING) {
-        return;
+    switch (request.type) {
+    case NEW_SETTING:
+        // adjust setting
+        fakedColorStatus = COLOR_STATUS[request.fakedColorStatus.toUpperCase()]; // eslint-disable-line no-unused-vars
+
+        // trigger functions
+        applyJsOverwrite(); // actually does not need to be retriggered, as the JS-overwrite does not need to be recreated
+        applyWantedStyle();
+        break;
+    case NEW_SETTING_ADDITIONAL:
+        functionalMode = request.functionalMode;
+
+        // trigger functions
+        applyWantedStyle();
+        break;
+    default:
+        console.warn("[dark-website-forcer] error: unknown communication request received, ignoring:", request);
     }
-
-    // adjust setting
-    fakedColorStatus = COLOR_STATUS[request.fakedColorStatus.toUpperCase()]; // eslint-disable-line no-unused-vars
-
-    // trigger functions
-    applyJsOverwrite(); // actually does not need to be retriggered, as the JS-overwrite does not need to be recreated
-    applyWantedStyle();
 }
 
 // add listener for incoming messages

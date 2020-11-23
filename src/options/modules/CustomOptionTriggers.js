@@ -6,7 +6,9 @@
 
 import * as AutomaticSettings from "/common/modules/AutomaticSettings/AutomaticSettings.js";
 import * as CustomMessages from "/common/modules/MessageHandler/CustomMessages.js";
+import * as BrowserCommunication from "/common/modules/BrowserCommunication/BrowserCommunication.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
+import { COMMUNICATION_MESSAGE_SOURCE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
 const TAB_FILTER_URLS = ["http://*/*", "https://*/*"];
 const MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE = "optionWarningRareStyleSetting";
@@ -21,10 +23,19 @@ const MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE = "optionWarningRareStyleSetting";
  * @returns {void}
  */
 function applyFakedColorStatus(optionValue) {
+    // show warning for rarely used values
+    if (optionValue === "light" || optionValue === "no_preference") {
+        CustomMessages.showMessage(MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE, "optionWarningRareStyleSetting", false);
+    } else {
+        CustomMessages.hideMessage(MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE, {animate: true});
+    }
+
     const newSettingsMessage = {
         type: COMMUNICATION_MESSAGE_TYPE.NEW_SETTING,
-        fakedColorStatus: optionValue
+        fakedColorStatus: optionValue,
+        source: COMMUNICATION_MESSAGE_SOURCE.SETTINGS_PAGE
     };
+    console.log("Options page send new option", newSettingsMessage);
 
     // send to all tabs
     browser.tabs.query({
@@ -37,15 +48,6 @@ function applyFakedColorStatus(optionValue) {
 
     // send to own background script
     browser.runtime.sendMessage(newSettingsMessage);
-
-    // show warning for rarely used values
-    if (optionValue === "light" || optionValue === "no_preference") {
-        CustomMessages.showMessage(MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE, "optionWarningRareStyleSetting", false);
-    } else {
-        CustomMessages.hideMessage(MESSAGE_POSSIBLY_BROKEN_SETTING_STYLE, {animate: true});
-    }
-
-    broadcastNewSettings();
 }
 
 /**
@@ -57,23 +59,11 @@ function applyFakedColorStatus(optionValue) {
  * @param  {string} [option]
  * @returns {void}
  */
-function applyFunctionalMode() {
-    broadcastNewSettings();
-}
-
-/**
- * Send message to other parts of add-on to apply new setting.
- *
- * @function
- * @private
- * @param  {boolean} fakedColorStatus
- * @param  {string} [option]
- * @returns {void}
- */
-function broadcastNewSettings(fakedColorStatus) {
+function applyFunctionalMode(optionValue) {
     const newSettingsMessage = {
-        type: COMMUNICATION_MESSAGE_TYPE.NEW_SETTING,
-        fakedColorStatus: fakedColorStatus
+        type: COMMUNICATION_MESSAGE_TYPE.NEW_ADDIONAL_SETTINGS,
+        functionalMode: optionValue,
+        source: COMMUNICATION_MESSAGE_SOURCE.SETTINGS_PAGE
     };
 
     // send to all tabs
@@ -84,8 +74,6 @@ function broadcastNewSettings(fakedColorStatus) {
             browser.tabs.sendMessage(tab.id, newSettingsMessage);
         }));
     });
-
-    // send to own background script
     browser.runtime.sendMessage(newSettingsMessage);
 }
 
@@ -105,4 +93,20 @@ export function registerTrigger() {
 
     // handle loading of options correctly
     AutomaticSettings.Trigger.registerAfterLoad(AutomaticSettings.Trigger.RUN_ALL_SAVE_TRIGGER);
+
+    // receive new setting changed by browserAction
+    BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
+        console.info("Received new fakedColorStatus setting:", request.fakedColorStatus);
+        // prevent infinite loop by blacklisting same source
+        // This is currently no problkem, as changing the option does not retrigger the triggers registered above, but
+        // included for security reasons anyway.
+        if (request.source === COMMUNICATION_MESSAGE_SOURCE.SETTINGS_PAGE) {
+            return;
+        }
+
+        console.info("Apply new fakedColorStatus setting to options page:", request.fakedColorStatus);
+
+        document.getElementById("fakedColorStatus").value = request.fakedColorStatus;
+    });
+
 }

@@ -18,7 +18,7 @@ export async function triggerNewColorStatus() {
     if (lastSettingsInjection) {
         (await lastSettingsInjection).unregister();
     }
-    lastSettingsInjection = enableSettingInjection();
+    lastSettingsInjection = await enableSettingInjection();
 }
 
 /**
@@ -75,9 +75,9 @@ function triggerCssOverwrite(tab) {
  * @function
  * @returns {void}
  */
-export function init() {
+export async function init() {
     // inject current preloaded setting to all tabs, so we have it as fast as possible
-    lastSettingsInjection = enableSettingInjection();
+    lastSettingsInjection = await enableSettingInjection();
 
     // trigger CSS replace for existing tabs
     browser.tabs.query({
@@ -91,7 +91,12 @@ export function init() {
 
 // register update for setting
 BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
-    console.info("Received new fakedColorStatus setting:", request.fakedColorStatus);
+    console.info("Received new fakedColorStatus setting:", request);
+
+    return triggerNewColorStatus();
+});
+BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_ADDIONAL_SETTINGS, (request) => {
+    console.info("Received new NEW_ADDIONAL_SETTINGS setting:", request);
 
     return triggerNewColorStatus();
 });

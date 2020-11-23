@@ -1,5 +1,6 @@
 import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
+import { COMMUNICATION_MESSAGE_SOURCE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
 import * as CssAnalysis from "./CssAnalysis.js";
 
