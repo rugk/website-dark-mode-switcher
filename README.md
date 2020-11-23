@@ -32,7 +32,7 @@ The technical story on why this is so hard to overwrite CSS like that in an add-
 
 That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818) (feel free to upvote, if you want this, too!).
 
-For this reason, the add-on is currently named “**Dark Website Forcer**”. This makes it more obvious to the user, that it cannot _force_ a light website.
+For this reason, the add-on is currently named “**Dark Website Forcer**”. This makes it more obvious to the user, that it _cannot force_ a light website.
 
 ## Contribute
 
