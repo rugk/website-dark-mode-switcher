@@ -1,4 +1,5 @@
 import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
+import * as BrowserCommunication from "/common/modules/BrowserCommunication/BrowserCommunication.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
 import { COMMUNICATION_MESSAGE_SOURCE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
@@ -56,7 +57,8 @@ function adjustUserIndicator(newColorSetting) {
 function propagateNewSetting(newColorSetting) {
     const newSettingsMessage = {
         type: COMMUNICATION_MESSAGE_TYPE.NEW_SETTING,
-        fakedColorStatus: newColorSetting
+        fakedColorStatus: newColorSetting,
+        source: COMMUNICATION_MESSAGE_SOURCE.BROWSER_ACTION
     };
 
     // send to all tabs
@@ -100,6 +102,17 @@ export async function init() {
     });
     browser.browserAction.setBadgeBackgroundColor({
         color: BADGE_BACKGROUND_COLOR
+    });
+
+    // receive new setting changed by settingspage
+    BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
+        // prevent same triggering by blacklisting same source
+        if (request.source === COMMUNICATION_MESSAGE_SOURCE.BROWSER_ACTION) {
+            return;
+        }
+
+        fakedColorStatus = request.fakedColorStatus;
+        adjustUserIndicator(fakedColorStatus);
     });
 
     adjustUserIndicator(fakedColorStatus);

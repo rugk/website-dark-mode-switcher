@@ -96,17 +96,16 @@ export function registerTrigger() {
 
     // receive new setting changed by browserAction
     BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
-        console.info("Received new fakedColorStatus setting:", request.fakedColorStatus);
         // prevent infinite loop by blacklisting same source
-        // This is currently no problkem, as changing the option does not retrigger the triggers registered above, but
-        // included for security reasons anyway.
         if (request.source === COMMUNICATION_MESSAGE_SOURCE.SETTINGS_PAGE) {
             return;
         }
 
         console.info("Apply new fakedColorStatus setting to options page:", request.fakedColorStatus);
 
-        document.getElementById("fakedColorStatus").value = request.fakedColorStatus;
+        const newColorSettingInput = document.getElementById("fakedColorStatus");
+        newColorSettingInput.value = request.fakedColorStatus;
+        newColorSettingInput.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
 }
