@@ -15,7 +15,7 @@ assignees: ''
 ## Steps to reproduce
 <!-- Describe what steps you did/can do to reproduce the problem. Also mention if it is not always reproducible. If applicable, add screenshots to help explain your problem. -->
 
-1. 
+1. Go to https://example.com/replace-with-url
 2. 
 3. 
 
