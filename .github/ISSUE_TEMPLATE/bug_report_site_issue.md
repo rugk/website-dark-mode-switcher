@@ -23,7 +23,7 @@ assignees: ''
 <!-- If you can record your steps that lead to the problem, please include a screencast (video of the steps) or, at least, a screenshot. -->
 
 ### Actual behavior
-<!-- The behavior you experienced. -->
+<!-- The behavior you experienced. Potentially also the log shown in the browser console (F12), as that is likely useful. -->
 
 ### Expected behavior
 <!-- A clear and concise description of what you expected to happen. -->
