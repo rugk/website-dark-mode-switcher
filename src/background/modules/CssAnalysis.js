@@ -42,7 +42,7 @@ async function enableSettingInjection() {
                 `,
         }],
         allFrames: true,
-        matchAboutBlank: false,
+        matchAboutBlank: true,
         runAt: "document_start"
     });
 }
