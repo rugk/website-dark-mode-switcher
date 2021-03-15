@@ -36,9 +36,8 @@ async function enableSettingInjection() {
         matches: TAB_FILTER_URLS,
         js: [{
             code: `
-                    // apply setting value
-                    functionalMode = ${functionalMode}
-                    fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
+                    ${setSettings.toString()}
+                    setSettings(${functionalMode}, "${fakedColorStatus.toUpperCase()}");
                 `,
         }],
         allFrames: true,
@@ -46,6 +45,35 @@ async function enableSettingInjection() {
         runAt: "document_start"
     });
 }
+
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-expressions */
+/**
+ * Sets the settings inside of the content script.
+ *
+ * **Important:** Execute this *only* inside of the content script.
+ *
+ * @private
+ * @param {bool} functionalModeNew
+ * @param {string} fakedColorStatusNewString
+ * @returns {void}
+ */
+function setSettings(functionalModeNew, fakedColorStatusNewString) {
+    functionalMode = functionalModeNew;
+    // apply settings value if COLOR_STATUS is defined = common.js is loaded
+    if (COLOR_STATUS) {
+        fakedColorStatus = COLOR_STATUS[fakedColorStatusNewString];
+        console.log("setSettings(): new settings applied:", functionalMode, fakedColorStatusNewString);
+    } else {
+        // in case the common.js is not loaded yet retry setting value
+        console.log("setSettings(): COLOR_STATUS is not defined yet, try setting settings again in 100ms");
+        setTimeout(() => {
+            setSettings(functionalMode, fakedColorStatusNewString);
+        }, 100);
+    }
+}
+/* eslint-enable no-undef */
+/* eslint-enable no-unused-expressions */
 
 /**
  * Manually trigger overwriting CSS.

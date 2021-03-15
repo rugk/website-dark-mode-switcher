@@ -5,15 +5,8 @@
 
 // should be set/overwritten very fast by manually registered content script
 // with more settings
+let functionalMode = null;
 let fakedColorStatus = null;
-
-// request and update setting as fast as possible
-browser.storage.sync.get("fakedColorStatus").then((settings) => {
-    // ATTENTION: hardcoded default value here!
-    const newSetting = settings.fakedColorStatus || "dark";
-
-    fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
-});
 
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
@@ -30,6 +23,14 @@ const MEDIA_QUERY_PREFER_COLOR = Object.freeze({
     [COLOR_STATUS.LIGHT]: /^\s*\(prefers-color-scheme:\s*light\)\s*$/,
     [COLOR_STATUS.DARK]: /^\s*\(prefers-color-scheme:\s*dark\)\s*$/,
     [COLOR_STATUS.NO_PREFERENCE]: /^\s*\(prefers-color-scheme:\s*no-preference\)\s*$/,
+});
+
+// request and update setting as fast as possible
+browser.storage.sync.get("fakedColorStatus").then((settings) => {
+    // ATTENTION: hardcoded default value here!
+    const newSetting = settings.fakedColorStatus || "dark";
+
+    fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
 });
 
 /**
