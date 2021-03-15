@@ -29,20 +29,20 @@ export async function triggerNewColorStatus() {
  * @returns {Promise}
  */
 async function enableSettingInjection() {
-    const fakedColorStatus = await AddonSettings.get("fakedColorStatus");
     const functionalMode = await AddonSettings.get("functionalMode");
+    const fakedColorStatus = await AddonSettings.get("fakedColorStatus");
 
     return browser.contentScripts.register({
         matches: TAB_FILTER_URLS,
         js: [{
             code: `
                     // apply setting value
-                    fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
                     functionalMode = ${functionalMode}
+                    fakedColorStatus = COLOR_STATUS["${fakedColorStatus.toUpperCase()}"]
                 `,
         }],
         allFrames: true,
-        matchAboutBlank: true,
+        matchAboutBlank: false,
         runAt: "document_start"
     });
 }
