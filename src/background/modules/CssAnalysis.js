@@ -61,14 +61,14 @@ async function enableSettingInjection() {
 function setSettings(functionalModeNew, fakedColorStatusNewString) {
     functionalMode = functionalModeNew;
     // apply settings value if COLOR_STATUS is defined = common.js is loaded
-    if (COLOR_STATUS) {
+    if (typeof COLOR_STATUS !== "undefined" && COLOR_STATUS) {
         fakedColorStatus = COLOR_STATUS[fakedColorStatusNewString];
         console.log("setSettings(): new settings applied:", functionalMode, fakedColorStatusNewString);
     } else {
         // in case the common.js is not loaded yet retry setting value
         console.log("setSettings(): COLOR_STATUS is not defined yet, try setting settings again in 100ms");
         setTimeout(() => {
-            setSettings(functionalMode, fakedColorStatusNewString);
+            setSettings(functionalModeNew, fakedColorStatusNewString);
         }, 100);
     }
 }
