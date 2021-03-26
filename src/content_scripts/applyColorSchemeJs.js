@@ -79,11 +79,11 @@ function getColorTypeFromMediaQuery(mediaQueryString) {
  * @returns {boolean|null}
  */
 function evaluateMediaQuery(mediaQueryString) {
-	let requestedMedia = getColorTypeFromMediaQuery(mediaQueryString);
-	if (requestedMedia === null) {
-		return null;
-	}
-	return (fakedColorStatus === requestedMedia);
+    let requestedMedia = getColorTypeFromMediaQuery(mediaQueryString);
+    if (requestedMedia === null) {
+        return null;
+    }
+    return (fakedColorStatus === requestedMedia);
 }
 
 /**
@@ -97,28 +97,28 @@ function evaluateMediaQuery(mediaQueryString) {
  * @returns {function} hook
  */
 function _OnListener(func, mediaQueryList, isOnChange) {
-	let entry = wmFuncToEntry.get(func);
+    let entry = wmFuncToEntry.get(func);
 
-	let hook, setMediaQueryList, setMediaQueryListOnChange;
-	if (!entry) {
-		hook = makeListenerHook(func);
-		setMediaQueryList = new Set();
-		setMediaQueryListOnChange = new Set();
-		wmFuncToEntry.set(func, { hook, setMediaQueryList, setMediaQueryListOnChange });
-		wmHookToFunc.set(hook, func);
-	} else {
-		({ hook, setMediaQueryList, setMediaQueryListOnChange } = entry);
-	}
+    let hook, setMediaQueryList, setMediaQueryListOnChange;
+    if (!entry) {
+        hook = makeListenerHook(func);
+        setMediaQueryList = new Set();
+        setMediaQueryListOnChange = new Set();
+        wmFuncToEntry.set(func, { hook, setMediaQueryList, setMediaQueryListOnChange });
+        wmHookToFunc.set(hook, func);
+    } else {
+        ({ hook, setMediaQueryList, setMediaQueryListOnChange } = entry);
+    }
 
-	if (isOnChange) {
-		setMediaQueryListOnChange.add(mediaQueryList);
-	} else {
-		setMediaQueryList.add(mediaQueryList);
-	}
+    if (isOnChange) {
+        setMediaQueryListOnChange.add(mediaQueryList);
+    } else {
+        setMediaQueryList.add(mediaQueryList);
+    }
 
-	setMediaQueryLists.add(mediaQueryList);
+    setMediaQueryLists.add(mediaQueryList);
 
-	return hook;
+    return hook;
 }
 
 /**
@@ -132,121 +132,121 @@ function _OnListener(func, mediaQueryList, isOnChange) {
  * @returns {function} hook
  */
 function _OffListener(func, mediaQueryList, isOnChange) {
-	let entry = wmFuncToEntry.get(func);
-	if (!entry) {
-		return null;
-	}
-	let { hook, setMediaQueryList, setMediaQueryListOnChange } = entry;
+    let entry = wmFuncToEntry.get(func);
+    if (!entry) {
+        return null;
+    }
+    let { hook, setMediaQueryList, setMediaQueryListOnChange } = entry;
 
-	if (isOnChange) {
-		setMediaQueryListOnChange.delete(mediaQueryList);
-	} else {
-		setMediaQueryList.delete(mediaQueryList);
-	}
+    if (isOnChange) {
+        setMediaQueryListOnChange.delete(mediaQueryList);
+    } else {
+        setMediaQueryList.delete(mediaQueryList);
+    }
 
-	if (setMediaQueryList.size === 0 && setMediaQueryListOnChange.size === 0) {
-		setMediaQueryLists.delete(mediaQueryList);
-	}
+    if (setMediaQueryList.size === 0 && setMediaQueryListOnChange.size === 0) {
+        setMediaQueryLists.delete(mediaQueryList);
+    }
 
-	return hook;
+    return hook;
 }
 
 const skeleton = {
-	addListener(func) {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			typeof func !== 'function' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalAddListener, this, arguments);
-		}
-		let hook = _OnListener(func, this, false);
-		return Reflect.apply(originalAddListener, this, [hook]);
-	},
-	removeListener(func) {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			typeof func !== 'function' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalRemoveListener, this, arguments);
-		}
-		let hook = _OffListener(func, this, false);
-		if (!hook) {
-			return Reflect.apply(originalRemoveListener, this, arguments);
-		}
-		return Reflect.apply(originalRemoveListener, this, [hook]);
-	},
-	get matches() {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]') {
-			return Reflect.apply(originalMatchesGetter, this, arguments);
-		}
-		let result = evaluateMediaQuery(this.media);
-		if (result === null) {
-			return Reflect.apply(originalMatchesGetter, this, arguments);
-		}
-		return result;
-	},
-	get onchange() {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalOnChangeGetter, this, arguments);
-		}
-		let hook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
-		if (typeof hook !== 'function') {
-			return hook;
-		}
-		let func = wmHookToFunc.get(hook);
-		if (typeof func !== 'function') {
-			// !!! BAD GUY !!!
-			return null;
-		}
-		return func;
-	},
-	set onchange(func) {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			typeof func !== 'function' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalOnChangeSetter, this, arguments);
-		}
-		let oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
-		if (typeof oldHook === 'function') {
-			let oldFunc = wmHookToFunc.get(oldHook);
-			if (!oldFunc) {
-				// !!! BAD GUY !!!
-				return Reflect.apply(originalOnChangeSetter, this, arguments);
-			}
-			_OffListener(oldFunc, this, true);
-		}
-		let hook = _OnListener(func, this, true);
-		return Reflect.apply(originalOnChangeSetter, this, [hook]);
-	},
+    addListener(func) {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            typeof func !== 'function' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalAddListener, this, arguments);
+        }
+        let hook = _OnListener(func, this, false);
+        return Reflect.apply(originalAddListener, this, [hook]);
+    },
+    removeListener(func) {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            typeof func !== 'function' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalRemoveListener, this, arguments);
+        }
+        let hook = _OffListener(func, this, false);
+        if (!hook) {
+            return Reflect.apply(originalRemoveListener, this, arguments);
+        }
+        return Reflect.apply(originalRemoveListener, this, [hook]);
+    },
+    get matches() {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]') {
+            return Reflect.apply(originalMatchesGetter, this, arguments);
+        }
+        let result = evaluateMediaQuery(this.media);
+        if (result === null) {
+            return Reflect.apply(originalMatchesGetter, this, arguments);
+        }
+        return result;
+    },
+    get onchange() {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalOnChangeGetter, this, arguments);
+        }
+        let hook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
+        if (typeof hook !== 'function') {
+            return hook;
+        }
+        let func = wmHookToFunc.get(hook);
+        if (typeof func !== 'function') {
+            // !!! BAD GUY !!!
+            return null;
+        }
+        return func;
+    },
+    set onchange(func) {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            typeof func !== 'function' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalOnChangeSetter, this, arguments);
+        }
+        let oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
+        if (typeof oldHook === 'function') {
+            let oldFunc = wmHookToFunc.get(oldHook);
+            if (!oldFunc) {
+                // !!! BAD GUY !!!
+                return Reflect.apply(originalOnChangeSetter, this, arguments);
+            }
+            _OffListener(oldFunc, this, true);
+        }
+        let hook = _OnListener(func, this, true);
+        return Reflect.apply(originalOnChangeSetter, this, [hook]);
+    },
 
-	addEventListener(type, listener, options) {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			type !== 'change' ||
-			typeof listener !== 'function' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalAddEventListener, this, arguments);
-		}
-		let hook = _OnListener(listener, this, false);
-		return Reflect.apply(originalAddEventListener, this, ['change', hook, options]);
-	},
-	removeEventListener(type, listener, options) {
-		if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
-			type !== 'change' ||
-			typeof listener !== 'function' ||
-			evaluateMediaQuery(this.media) === null
-		) {
-			return Reflect.apply(originalRemoveEventListener, this, arguments);
-		}
-		let hook = _OffListener(listener, this, false);
-		if (!hook) {
-			return Reflect.apply(originalRemoveEventListener, this, arguments);
-		}
-		return Reflect.apply(originalRemoveEventListener, this, ['change', hook, options]);
-	}
+    addEventListener(type, listener, options) {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            type !== 'change' ||
+            typeof listener !== 'function' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalAddEventListener, this, arguments);
+        }
+        let hook = _OnListener(listener, this, false);
+        return Reflect.apply(originalAddEventListener, this, ['change', hook, options]);
+    },
+    removeEventListener(type, listener, options) {
+        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+            type !== 'change' ||
+            typeof listener !== 'function' ||
+            evaluateMediaQuery(this.media) === null
+        ) {
+            return Reflect.apply(originalRemoveEventListener, this, arguments);
+        }
+        let hook = _OffListener(listener, this, false);
+        if (!hook) {
+            return Reflect.apply(originalRemoveEventListener, this, arguments);
+        }
+        return Reflect.apply(originalRemoveEventListener, this, ['change', hook, options]);
+    }
 };
 
 /**
@@ -257,21 +257,21 @@ const skeleton = {
  * @returns {function}
  */
 function makeListenerHook(func) {
-	let dummy = unsafeObjectCreate(null);
-	return exportFunction(function(event) {
-		if (Object.prototype.toString.call(event) !== '[object MediaQueryListEvent]') {
-			return Function.prototype.apply.call(func, this, arguments);
-		}
+    let dummy = unsafeObjectCreate(null);
+    return exportFunction(function(event) {
+        if (Object.prototype.toString.call(event) !== '[object MediaQueryListEvent]') {
+            return Function.prototype.apply.call(func, this, arguments);
+        }
 
-		if (!dispatching && event.isTrusted) {
-			// swallow events originating from the browser
-			return;
-		}
+        if (!dispatching && event.isTrusted) {
+            // swallow events originating from the browser
+            return;
+        }
 
-		return Function.prototype.apply.call(func, this, arguments);
-	}, dummy, {
-		defineAs: func.name
-	});
+        return Function.prototype.apply.call(func, this, arguments);
+    }, dummy, {
+        defineAs: func.name
+    });
 }
 
 /**
@@ -280,29 +280,29 @@ function makeListenerHook(func) {
  * @private
  */
 function dispatchChangeEvents() {
-	// [CAVEAT]
-	// In vanilla Firefox, events are dispatched to `MediaQueryList`s in the order they are created.
-	// Since there is no way to keep track of the order of all `MediaQueryList`s without memory leaks,
-	// we are calling them in the order they are assigned listeners.
-	dispatching = true;
-	for (let mediaQueryList of setMediaQueryLists) {
-		let result = evaluateMediaQuery(mediaQueryList.media);
-		if (result === null) {
-			continue;
-		}
-		// [CAVEAT]
-		// https://bugzilla.mozilla.org/show_bug.cgi?id=1348213
-		// WebExtensions have no way of generating trusted events
-		let event = new MediaQueryListEvent('change', {
-			media: mediaQueryList.media,
-			matches: result
-		});
-		wmFakeEvents.add(event);
-		mediaQueryList.dispatchEvent(event);
-	}
-	dispatching = false;
+    // [CAVEAT]
+    // In vanilla Firefox, events are dispatched to `MediaQueryList`s in the order they are created.
+    // Since there is no way to keep track of the order of all `MediaQueryList`s without memory leaks,
+    // we are calling them in the order they are assigned listeners.
+    dispatching = true;
+    for (let mediaQueryList of setMediaQueryLists) {
+        let result = evaluateMediaQuery(mediaQueryList.media);
+        if (result === null) {
+            continue;
+        }
+        // [CAVEAT]
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1348213
+        // WebExtensions have no way of generating trusted events
+        let event = new MediaQueryListEvent('change', {
+            media: mediaQueryList.media,
+            matches: result
+        });
+        wmFakeEvents.add(event);
+        mediaQueryList.dispatchEvent(event);
+    }
+    dispatching = false;
 
-	jsColorStatus = fakedColorStatus;
+    jsColorStatus = fakedColorStatus;
 }
 
 
@@ -315,54 +315,54 @@ function dispatchChangeEvents() {
 function applyJsOverwrite() {
     // do not overwrite twice
     if (overwroteMatchMedia) {
-		if (jsColorStatus !== fakedColorStatus) {
-			dispatchChangeEvents();
-		}
+        if (jsColorStatus !== fakedColorStatus) {
+            dispatchChangeEvents();
+        }
         return;
     }
 
     // actually overwrite
 
     Reflect.defineProperty(MediaQueryListPrototype, 'addListener', {
-		configurable: true,
-		enumerable: true,
-		value: exportFunction(skeleton.addListener, window),
-		writable: true
-	});
+        configurable: true,
+        enumerable: true,
+        value: exportFunction(skeleton.addListener, window),
+        writable: true
+    });
     Reflect.defineProperty(MediaQueryListPrototype, 'removeListener', {
-		configurable: true,
-		enumerable: true,
-		value: exportFunction(skeleton.removeListener, window),
-		writable: true
-	});
-	let descMatches = Reflect.getOwnPropertyDescriptor(skeleton, 'matches');
+        configurable: true,
+        enumerable: true,
+        value: exportFunction(skeleton.removeListener, window),
+        writable: true
+    });
+    let descMatches = Reflect.getOwnPropertyDescriptor(skeleton, 'matches');
     Reflect.defineProperty(MediaQueryListPrototype, 'matches', {
-		configurable: true,
-		enumerable: true,
-		get: exportFunction(descMatches.get, window)
-	});
-	let descOnchange = Reflect.getOwnPropertyDescriptor(skeleton, 'onchange');
+        configurable: true,
+        enumerable: true,
+        get: exportFunction(descMatches.get, window)
+    });
+    let descOnchange = Reflect.getOwnPropertyDescriptor(skeleton, 'onchange');
     Reflect.defineProperty(MediaQueryListPrototype, 'onchange', {
-		configurable: true,
-		enumerable: true,
-		get: exportFunction(descOnchange.get, window),
-		set: exportFunction(descOnchange.set, window),
-	});
+        configurable: true,
+        enumerable: true,
+        get: exportFunction(descOnchange.get, window),
+        set: exportFunction(descOnchange.set, window),
+    });
 
     Reflect.defineProperty(EventTargetPrototype, 'addEventListener', {
-		configurable: true,
-		enumerable: true,
-		value: exportFunction(skeleton.addEventListener, window),
-		writable: true
-	});
+        configurable: true,
+        enumerable: true,
+        value: exportFunction(skeleton.addEventListener, window),
+        writable: true
+    });
     Reflect.defineProperty(EventTargetPrototype, 'removeEventListener', {
-		configurable: true,
-		enumerable: true,
-		value: exportFunction(skeleton.removeEventListener, window),
-		writable: true
-	});
+        configurable: true,
+        enumerable: true,
+        value: exportFunction(skeleton.removeEventListener, window),
+        writable: true
+    });
 
-	overwroteMatchMedia = true;
+    overwroteMatchMedia = true;
 }
 
 applyJsOverwrite();
