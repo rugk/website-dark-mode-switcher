@@ -204,7 +204,7 @@ const skeleton = {
         }
         let func = wmHookToFunc.get(hook);
         if (typeof func !== 'function') {
-            console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
+            console.error('[website-dark-mode-switcher] someone called "get onchange" on an unknown MediaQueryList!');
             return null;
         }
         return func;
