@@ -155,7 +155,7 @@ function _OffListener(func, mediaQueryList, isOnChange) {
  * @returns {boolean}
  */
 function _checkIsMediaQueryList(obj) {
-    return (Object.prototype.toString.call(this) === '[object MediaQueryList]');
+    return (Object.prototype.toString.call(obj) === '[object MediaQueryList]');
 }
 
 const skeleton = {
