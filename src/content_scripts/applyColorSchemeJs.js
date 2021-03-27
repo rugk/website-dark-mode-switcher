@@ -240,7 +240,7 @@ const skeleton = {
         let oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
         if (typeof oldHook === 'function') {
             let oldFunc = wmHookToFunc.get(oldHook);
-            if (!oldFunc) {
+            if (typeof oldFunc !== 'function') {
                 console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
                 // eslint-disable-next-line no-setter-return
                 return Reflect.apply(originalOnChangeSetter, this, arguments);
