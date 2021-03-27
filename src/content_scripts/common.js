@@ -3,13 +3,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
 
+/* globals browser */
+
 // should be set/overwritten very fast by manually registered content script
 // with more settings
 let functionalMode = null;
 let fakedColorStatus = null;
-
-// the color status last shown to the page javascript
-let jsColorStatus = fakedColorStatus;
 
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
@@ -34,7 +33,6 @@ browser.storage.sync.get("fakedColorStatus").then((settings) => {
     const newSetting = settings.fakedColorStatus || "dark";
 
     fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
-    jsColorStatus = fakedColorStatus;
 });
 
 /**

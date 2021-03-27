@@ -6,8 +6,6 @@
 
 let overwroteMatchMedia = false;
 
-const ADDON_FAKED_WARNING = "matchMedia has been faked/overwritten by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
-
 // instances of `MediaQueryList`s with listeners
 const setMediaQueryLists = new Set();
 
@@ -16,8 +14,6 @@ const wmFuncToEntry = new WeakMap();
 
 // hook -> func
 const wmHookToFunc = new WeakMap();
-
-const originalMatchMedia = window.wrappedJSObject.matchMedia;
 
 const privilegedOnChangeGetter = Reflect.getOwnPropertyDescriptor(MediaQueryList.prototype, 'onchange').get;
 
@@ -38,7 +34,7 @@ const unsafeObjectCreate = window.wrappedJSObject.Object.create;
 // Whether we are dispatching "change" events
 let dispatching = false;
 
-/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, jsColorStatus */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction */
@@ -194,7 +190,8 @@ const skeleton = {
         }
         let func = wmHookToFunc.get(hook);
         if (typeof func !== 'function') {
-            // !!! BAD GUY !!!
+            // ! someone called us on an unknown MediaQueryList
+            // ! may be a hacking attempt
             return null;
         }
         return func;
@@ -204,18 +201,22 @@ const skeleton = {
             typeof func !== 'function' ||
             evaluateMediaQuery(this.media) === null
         ) {
+            // eslint-disable-next-line no-setter-return
             return Reflect.apply(originalOnChangeSetter, this, arguments);
         }
         let oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
         if (typeof oldHook === 'function') {
             let oldFunc = wmHookToFunc.get(oldHook);
             if (!oldFunc) {
-                // !!! BAD GUY !!!
+                // ! someone called us on an unknown MediaQueryList
+                // ! may be a hacking attempt
+                // eslint-disable-next-line no-setter-return
                 return Reflect.apply(originalOnChangeSetter, this, arguments);
             }
             _OffListener(oldFunc, this, true);
         }
         let hook = _OnListener(func, this, true);
+        // eslint-disable-next-line no-setter-return
         return Reflect.apply(originalOnChangeSetter, this, [hook]);
     },
 
@@ -297,10 +298,7 @@ function dispatchChangeEvents() {
         mediaQueryList.dispatchEvent(event);
     }
     dispatching = false;
-
-    jsColorStatus = fakedColorStatus;
 }
-
 
 /**
  * Apply the JS overwrite.
@@ -311,9 +309,7 @@ function dispatchChangeEvents() {
 function applyJsOverwrite() {
     // do not overwrite twice
     if (overwroteMatchMedia) {
-        if (jsColorStatus !== fakedColorStatus) {
-            dispatchChangeEvents();
-        }
+        dispatchChangeEvents();
         return;
     }
 
@@ -331,18 +327,18 @@ function applyJsOverwrite() {
         value: exportFunction(skeleton.removeListener, window),
         writable: true
     });
-    let descMatches = Reflect.getOwnPropertyDescriptor(skeleton, 'matches');
+    let descriptorMatches = Reflect.getOwnPropertyDescriptor(skeleton, 'matches');
     Reflect.defineProperty(MediaQueryListPrototype, 'matches', {
         configurable: true,
         enumerable: true,
-        get: exportFunction(descMatches.get, window)
+        get: exportFunction(descriptorMatches.get, window)
     });
-    let descOnchange = Reflect.getOwnPropertyDescriptor(skeleton, 'onchange');
+    let descriptorOnchange = Reflect.getOwnPropertyDescriptor(skeleton, 'onchange');
     Reflect.defineProperty(MediaQueryListPrototype, 'onchange', {
         configurable: true,
         enumerable: true,
-        get: exportFunction(descOnchange.get, window),
-        set: exportFunction(descOnchange.set, window),
+        get: exportFunction(descriptorOnchange.get, window),
+        set: exportFunction(descriptorOnchange.set, window),
     });
 
     Reflect.defineProperty(EventTargetPrototype, 'addEventListener', {
