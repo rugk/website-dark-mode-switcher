@@ -8,6 +8,9 @@
 let functionalMode = null;
 let fakedColorStatus = null;
 
+// last setting seen by js
+let jsLastColorStatus = null;
+
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
     LIGHT: Symbol("prefers-color-scheme: light"),
@@ -31,6 +34,7 @@ browser.storage.sync.get("fakedColorStatus").then((settings) => {
     const newSetting = settings.fakedColorStatus || "dark";
 
     fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
+    jsLastColorStatus = fakedColorStatus;
 });
 
 /**

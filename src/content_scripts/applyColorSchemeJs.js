@@ -6,7 +6,8 @@
 
 let overwroteMatchMedia = false;
 
-const ADDON_FAKED_WARNING = "MediaQueryList has been mutated by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
+const ADDON_FAKED_WARNING = "MediaQueryList has been faked by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
+let loggedFakedWarning = false;
 
 // instances of `MediaQueryList`s with listeners
 const setMediaQueryLists = new Set();
@@ -36,7 +37,7 @@ const unsafeObjectCreate = window.wrappedJSObject.Object.create;
 // Whether we are dispatching "change" events
 let dispatching = false;
 
-/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, jsLastColorStatus */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction */
@@ -50,7 +51,7 @@ let dispatching = false;
  */
 function getColorTypeFromMediaQuery(mediaQueryString) {
     // to avoid expensive RegEx, first use a simple check
-    if (!mediaQueryString.includes(MEDIA_QUERY_COLOR_SCHEME)) {
+    if (!hasMediaQuery(mediaQueryString)) {
         return null;
     }
 
@@ -58,11 +59,22 @@ function getColorTypeFromMediaQuery(mediaQueryString) {
         return COLOR_STATUS.LIGHT;
     } else if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.DARK].test(mediaQueryString)) {
         return COLOR_STATUS.DARK;
-    } else if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.NO_PREFERENCE]) {
+    } else if (MEDIA_QUERY_PREFER_COLOR[COLOR_STATUS.NO_PREFERENCE].test(mediaQueryString)) {
         return COLOR_STATUS.NO_PREFERENCE;
     } else {
         return null;
     }
+}
+
+/**
+ * Whether a string contains media query for color scheme
+ *
+ * @private
+ * @param {string} mediaQueryString
+ * @returns {boolean}
+ */
+function hasMediaQuery(mediaQueryString) {
+    return (mediaQueryString.includes(MEDIA_QUERY_COLOR_SCHEME));
 }
 
 /**
@@ -74,10 +86,15 @@ function getColorTypeFromMediaQuery(mediaQueryString) {
  * @returns {boolean|null}
  */
 function evaluateMediaQuery(mediaQueryString) {
+    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
+        return matchMedia(mediaQueryString).matches;
+    }
+
     let requestedMedia = getColorTypeFromMediaQuery(mediaQueryString);
     if (requestedMedia === null) {
         return null;
     }
+
     return (fakedColorStatus === requestedMedia);
 }
 
@@ -91,7 +108,7 @@ function evaluateMediaQuery(mediaQueryString) {
  * @param {boolean} isOnChange
  * @returns {function} hook
  */
-function _OnListener(func, mediaQueryList, isOnChange) {
+function trackOnListener(func, mediaQueryList, isOnChange) {
     let entry = wmFuncToEntry.get(func);
 
     let hook, setMediaQueryList, setMediaQueryListOnChange;
@@ -126,7 +143,7 @@ function _OnListener(func, mediaQueryList, isOnChange) {
  * @param {boolean} isOnChange
  * @returns {function} hook
  */
-function _OffListener(func, mediaQueryList, isOnChange) {
+function trackOffListener(func, mediaQueryList, isOnChange) {
     let entry = wmFuncToEntry.get(func);
     if (!entry) {
         return null;
@@ -154,47 +171,50 @@ function _OffListener(func, mediaQueryList, isOnChange) {
  * @param {function} obj
  * @returns {boolean}
  */
-function _checkIsMediaQueryList(obj) {
+function checkIsMediaQueryList(obj) {
     return (Object.prototype.toString.call(obj) === '[object MediaQueryList]');
 }
 
 const skeleton = {
     addListener(func) {
-        if (!_checkIsMediaQueryList(this) ||
+        if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            evaluateMediaQuery(this.media) === null
+            !hasMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddListener, this, arguments);
         }
-        let hook = _OnListener(func, this, false);
+        let hook = trackOnListener(func, this, false);
         return Reflect.apply(originalAddListener, this, [hook]);
     },
     removeListener(func) {
-        if (!_checkIsMediaQueryList(this) ||
+        if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            evaluateMediaQuery(this.media) === null
+            !hasMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveListener, this, arguments);
         }
-        let hook = _OffListener(func, this, false);
+        let hook = trackOffListener(func, this, false);
         if (!hook) {
             return Reflect.apply(originalRemoveListener, this, arguments);
         }
         return Reflect.apply(originalRemoveListener, this, [hook]);
     },
     get matches() {
-        if (!_checkIsMediaQueryList(this)) {
+        if (!checkIsMediaQueryList(this) ||
+            fakedColorStatus === COLOR_STATUS.NO_OVERWRITE
+        ) {
             return Reflect.apply(originalMatchesGetter, this, arguments);
         }
         let result = evaluateMediaQuery(this.media);
         if (result === null) {
             return Reflect.apply(originalMatchesGetter, this, arguments);
         }
+        mayLogFakeWarning();
         return result;
     },
     get onchange() {
-        if (!_checkIsMediaQueryList(this) ||
-            evaluateMediaQuery(this.media) === null
+        if (!checkIsMediaQueryList(this) ||
+            !hasMediaQuery(this.media)
         ) {
             return Reflect.apply(originalOnChangeGetter, this, arguments);
         }
@@ -210,9 +230,9 @@ const skeleton = {
         return func;
     },
     set onchange(func) {
-        if (!_checkIsMediaQueryList(this) ||
+        if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            evaluateMediaQuery(this.media) === null
+            !hasMediaQuery(this.media)
         ) {
             // eslint-disable-next-line no-setter-return
             return Reflect.apply(originalOnChangeSetter, this, arguments);
@@ -225,33 +245,33 @@ const skeleton = {
                 // eslint-disable-next-line no-setter-return
                 return Reflect.apply(originalOnChangeSetter, this, arguments);
             }
-            _OffListener(oldFunc, this, true);
+            trackOffListener(oldFunc, this, true);
         }
-        let hook = _OnListener(func, this, true);
+        let hook = trackOnListener(func, this, true);
         // eslint-disable-next-line no-setter-return
         return Reflect.apply(originalOnChangeSetter, this, [hook]);
     },
 
     addEventListener(type, listener, options) {
-        if (!_checkIsMediaQueryList(this) ||
+        if (!checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
-            evaluateMediaQuery(this.media) === null
+            !hasMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddEventListener, this, arguments);
         }
-        let hook = _OnListener(listener, this, false);
+        let hook = trackOnListener(listener, this, false);
         return Reflect.apply(originalAddEventListener, this, ['change', hook, options]);
     },
     removeEventListener(type, listener, options) {
-        if (!_checkIsMediaQueryList(this) ||
+        if (!checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
-            evaluateMediaQuery(this.media) === null
+            !hasMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
         }
-        let hook = _OffListener(listener, this, false);
+        let hook = trackOffListener(listener, this, false);
         if (!hook) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
         }
@@ -269,12 +289,15 @@ const skeleton = {
 function makeListenerHook(func) {
     let dummy = unsafeObjectCreate(null);
     return exportFunction(function(event) {
-        if (Object.prototype.toString.call(event) !== '[object MediaQueryListEvent]') {
+        if (Object.prototype.toString.call(event) !== '[object MediaQueryListEvent]' ||
+            fakedColorStatus === COLOR_STATUS.NO_OVERWRITE
+        ) {
             return Function.prototype.apply.call(func, this, arguments);
         }
 
         if (!dispatching && event.isTrusted) {
             // swallow events originating from the browser
+            mayLogFakeWarning();
             return;
         }
 
@@ -290,6 +313,12 @@ function makeListenerHook(func) {
  * @private
  */
 function dispatchChangeEvents() {
+    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE &&
+        jsLastColorStatus === getSystemMediaStatus()
+    ) {
+        return;
+    }
+
     // [CAVEAT]
     // In vanilla Firefox, events are dispatched to `MediaQueryList`s in the order they are created.
     // Since there is no way to keep track of the order of all `MediaQueryList`s without memory leaks,
@@ -300,6 +329,7 @@ function dispatchChangeEvents() {
         if (result === null) {
             continue;
         }
+        mayLogFakeWarning();
         // [CAVEAT]
         // https://bugzilla.mozilla.org/show_bug.cgi?id=1348213
         // WebExtensions have no way of generating trusted events
@@ -324,6 +354,9 @@ function applyJsOverwrite() {
         dispatchChangeEvents();
         return;
     }
+
+    // eslint-disable-next-line no-global-assign
+    jsLastColorStatus = fakedColorStatus;
 
     // actually overwrite
 
@@ -367,7 +400,16 @@ function applyJsOverwrite() {
     });
 
     overwroteMatchMedia = true;
-    console.log(ADDON_FAKED_WARNING);
 }
 
 applyJsOverwrite();
+
+/**
+ * Logs ADDON_FAKED_WARNING if not already did
+ */
+function mayLogFakeWarning() {
+    if (!loggedFakedWarning) {
+        console.log(ADDON_FAKED_WARNING);
+        loggedFakedWarning = true;
+    }
+}
