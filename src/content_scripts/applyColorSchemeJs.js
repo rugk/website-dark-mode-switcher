@@ -242,8 +242,7 @@ const skeleton = {
             let oldFunc = wmHookToFunc.get(oldHook);
             if (typeof oldFunc !== 'function') {
                 console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
-                // eslint-disable-next-line no-setter-return
-                return Reflect.apply(originalOnChangeSetter, this, arguments);
+                return;
             }
             trackOffListener(oldFunc, this, true);
         }
