@@ -34,7 +34,7 @@ browser.storage.sync.get("fakedColorStatus").then((settings) => {
     const newSetting = settings.fakedColorStatus || "dark";
 
     fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
-	jsColorStatus = fakedColorStatus;
+    jsColorStatus = fakedColorStatus;
 });
 
 /**

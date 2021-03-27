@@ -35,9 +35,6 @@ const originalRemoveEventListener = EventTargetPrototype.removeEventListener;
 // ugly juggling principals
 const unsafeObjectCreate = window.wrappedJSObject.Object.create;
 
-// keep track of our generated fake events
-const wmFakeEvents = new WeakSet();
-
 // Whether we are dispatching "change" events
 let dispatching = false;
 
@@ -297,7 +294,6 @@ function dispatchChangeEvents() {
             media: mediaQueryList.media,
             matches: result
         });
-        wmFakeEvents.add(event);
         mediaQueryList.dispatchEvent(event);
     }
     dispatching = false;
