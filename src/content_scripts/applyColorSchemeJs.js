@@ -6,6 +6,8 @@
 
 let overwroteMatchMedia = false;
 
+const ADDON_FAKED_WARNING = "MediaQueryList has been mutated by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
+
 // instances of `MediaQueryList`s with listeners
 const setMediaQueryLists = new Set();
 
@@ -144,9 +146,21 @@ function _OffListener(func, mediaQueryList, isOnChange) {
     return hook;
 }
 
+/**
+ * Check if an object is a MediaQueryList
+ * The correctness of this relies on Firefox's XPCNativeWrapper
+ *
+ * @private
+ * @param {function} obj
+ * @returns {boolean}
+ */
+function _checkIsMediaQueryList(obj) {
+    return (Object.prototype.toString.call(this) === '[object MediaQueryList]');
+}
+
 const skeleton = {
     addListener(func) {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
             evaluateMediaQuery(this.media) === null
         ) {
@@ -156,7 +170,7 @@ const skeleton = {
         return Reflect.apply(originalAddListener, this, [hook]);
     },
     removeListener(func) {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
             evaluateMediaQuery(this.media) === null
         ) {
@@ -169,7 +183,7 @@ const skeleton = {
         return Reflect.apply(originalRemoveListener, this, [hook]);
     },
     get matches() {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]') {
+        if (!_checkIsMediaQueryList(this)) {
             return Reflect.apply(originalMatchesGetter, this, arguments);
         }
         let result = evaluateMediaQuery(this.media);
@@ -179,7 +193,7 @@ const skeleton = {
         return result;
     },
     get onchange() {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             evaluateMediaQuery(this.media) === null
         ) {
             return Reflect.apply(originalOnChangeGetter, this, arguments);
@@ -190,14 +204,13 @@ const skeleton = {
         }
         let func = wmHookToFunc.get(hook);
         if (typeof func !== 'function') {
-            // ! someone called us on an unknown MediaQueryList
-            // ! may be a hacking attempt
+            console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
             return null;
         }
         return func;
     },
     set onchange(func) {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
             evaluateMediaQuery(this.media) === null
         ) {
@@ -208,8 +221,7 @@ const skeleton = {
         if (typeof oldHook === 'function') {
             let oldFunc = wmHookToFunc.get(oldHook);
             if (!oldFunc) {
-                // ! someone called us on an unknown MediaQueryList
-                // ! may be a hacking attempt
+                console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
                 // eslint-disable-next-line no-setter-return
                 return Reflect.apply(originalOnChangeSetter, this, arguments);
             }
@@ -221,7 +233,7 @@ const skeleton = {
     },
 
     addEventListener(type, listener, options) {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
             evaluateMediaQuery(this.media) === null
@@ -232,7 +244,7 @@ const skeleton = {
         return Reflect.apply(originalAddEventListener, this, ['change', hook, options]);
     },
     removeEventListener(type, listener, options) {
-        if (Object.prototype.toString.call(this) !== '[object MediaQueryList]' ||
+        if (!_checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
             evaluateMediaQuery(this.media) === null
@@ -355,6 +367,7 @@ function applyJsOverwrite() {
     });
 
     overwroteMatchMedia = true;
+    console.log(ADDON_FAKED_WARNING);
 }
 
 applyJsOverwrite();

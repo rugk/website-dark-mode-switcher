@@ -3,8 +3,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
 
-/* globals browser */
-
 // should be set/overwritten very fast by manually registered content script
 // with more settings
 let functionalMode = null;
