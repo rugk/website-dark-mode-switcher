@@ -51,7 +51,7 @@ let dispatching = false;
  */
 function getColorTypeFromMediaQuery(mediaQueryString) {
     // to avoid expensive RegEx, first use a simple check
-    if (!hasMediaQuery(mediaQueryString)) {
+    if (!hasColorMediaQuery(mediaQueryString)) {
         return null;
     }
 
@@ -73,7 +73,7 @@ function getColorTypeFromMediaQuery(mediaQueryString) {
  * @param {string} mediaQueryString
  * @returns {boolean}
  */
-function hasMediaQuery(mediaQueryString) {
+function hasColorMediaQuery(mediaQueryString) {
     return (mediaQueryString.includes(MEDIA_QUERY_COLOR_SCHEME));
 }
 
@@ -179,7 +179,7 @@ const skeleton = {
     addListener(func) {
         if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddListener, this, arguments);
         }
@@ -189,7 +189,7 @@ const skeleton = {
     removeListener(func) {
         if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveListener, this, arguments);
         }
@@ -214,7 +214,7 @@ const skeleton = {
     },
     get onchange() {
         if (!checkIsMediaQueryList(this) ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalOnChangeGetter, this, arguments);
         }
@@ -232,7 +232,7 @@ const skeleton = {
     set onchange(func) {
         if (!checkIsMediaQueryList(this) ||
             typeof func !== 'function' ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             // eslint-disable-next-line no-setter-return
             return Reflect.apply(originalOnChangeSetter, this, arguments);
@@ -256,7 +256,7 @@ const skeleton = {
         if (!checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddEventListener, this, arguments);
         }
@@ -267,7 +267,7 @@ const skeleton = {
         if (!checkIsMediaQueryList(this) ||
             type !== 'change' ||
             typeof listener !== 'function' ||
-            !hasMediaQuery(this.media)
+            !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
         }
