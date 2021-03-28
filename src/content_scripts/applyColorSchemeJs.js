@@ -1,5 +1,7 @@
 /**
  * Applying the color's JS.
+ * 
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList}
  */
 
 "use strict";
@@ -41,10 +43,6 @@ let dispatching = false;
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction */
-
-//
-// See https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
-//
 
 /**
  * Returns the COLOR_STATUS for a media query string.
