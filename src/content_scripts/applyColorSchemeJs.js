@@ -13,10 +13,10 @@ let loggedFakedWarning = false;
 const setMediaQueryLists = new Set();
 
 // func -> { hook, setMediaQueryList, setMediaQueryListOnChange }
-const wmFuncToEntry = new WeakMap();
+const weakmapFuncToEntry = new WeakMap();
 
 // hook -> func
-const wmHookToFunc = new WeakMap();
+const weakmapHookToFunc = new WeakMap();
 
 const privilegedOnChangeGetter = Reflect.getOwnPropertyDescriptor(MediaQueryList.prototype, 'onchange').get;
 
@@ -41,6 +41,10 @@ let dispatching = false;
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction */
+
+//
+// See https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
+//
 
 /**
  * Returns the COLOR_STATUS for a media query string.
@@ -103,23 +107,29 @@ function evaluateMediaQuery(mediaQueryString) {
  * Creates hook function if necessary
  *
  * @private
- * @param {function} func original listener
+ * @param {function} listener original listener
  * @param {MediaQueryList} mediaQueryList
  * @param {boolean} isOnChange
  * @returns {function} hook
  */
-function trackOnListener(func, mediaQueryList, isOnChange) {
-    let entry = wmFuncToEntry.get(func);
+function trackOnListener(listener, mediaQueryList, isOnChange) {
+    let entry = weakmapFuncToEntry.get(listener);
 
     let hook, setMediaQueryList, setMediaQueryListOnChange;
     if (!entry) {
-        hook = makeListenerHook(func);
+        hook = makeListenerHook(listener);
         setMediaQueryList = new Set();
         setMediaQueryListOnChange = new Set();
-        wmFuncToEntry.set(func, { hook, setMediaQueryList, setMediaQueryListOnChange });
-        wmHookToFunc.set(hook, func);
+        weakmapFuncToEntry.set(listener, {
+            hook: hook,
+            setMediaQueryList: setMediaQueryLists,
+            setMediaQueryListOnChange: setMediaQueryListOnChange
+        });
+        weakmapHookToFunc.set(hook, listener);
     } else {
-        ({ hook, setMediaQueryList, setMediaQueryListOnChange } = entry);
+        hook = entry.hook;
+        setMediaQueryList = entry.setMediaQueryList;
+        setMediaQueryListOnChange = entry.setMediaQueryListOnChange;
     }
 
     if (isOnChange) {
@@ -138,17 +148,19 @@ function trackOnListener(func, mediaQueryList, isOnChange) {
  * Returns hook function or null if not found
  *
  * @private
- * @param {function} func original listener
+ * @param {function} listener original listener
  * @param {MediaQueryList} mediaQueryList
  * @param {boolean} isOnChange
  * @returns {function} hook
  */
-function trackOffListener(func, mediaQueryList, isOnChange) {
-    let entry = wmFuncToEntry.get(func);
+function trackOffListener(listener, mediaQueryList, isOnChange) {
+    let entry = weakmapFuncToEntry.get(listener);
     if (!entry) {
         return null;
     }
-    let { hook, setMediaQueryList, setMediaQueryListOnChange } = entry;
+    let hook = entry.hook;
+    let setMediaQueryList = entry.setMediaQueryList;
+    let setMediaQueryListOnChange = entry.setMediaQueryListOnChange;
 
     if (isOnChange) {
         setMediaQueryListOnChange.delete(mediaQueryList);
@@ -175,6 +187,10 @@ function checkIsMediaQueryList(obj) {
     return (Object.prototype.toString.call(obj) === '[object MediaQueryList]');
 }
 
+/**
+ * Kludge "skeleton" to make exportFunction()-ed .name and .toString() as expected.
+ * such as "get onchange", "set onchange".
+ */
 const skeleton = {
     addListener(func) {
         if (!checkIsMediaQueryList(this) ||
@@ -222,7 +238,7 @@ const skeleton = {
         if (typeof hook !== 'function') {
             return hook;
         }
-        let func = wmHookToFunc.get(hook);
+        let func = weakmapHookToFunc.get(hook);
         if (typeof func !== 'function') {
             console.error('[website-dark-mode-switcher] someone called "get onchange" on an unknown MediaQueryList!');
             return null;
@@ -239,7 +255,7 @@ const skeleton = {
         }
         let oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
         if (typeof oldHook === 'function') {
-            let oldFunc = wmHookToFunc.get(oldHook);
+            let oldFunc = weakmapHookToFunc.get(oldHook);
             if (typeof oldFunc !== 'function') {
                 console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
                 return;
@@ -282,16 +298,16 @@ const skeleton = {
  * Make a hook function for "change" event listener
  *
  * @private
- * @param {function} func the original listener function
+ * @param {function} listener the original listener function
  * @returns {function}
  */
-function makeListenerHook(func) {
+function makeListenerHook(listener) {
     let dummy = unsafeObjectCreate(null);
     return exportFunction(function(event) {
         if (Object.prototype.toString.call(event) !== '[object MediaQueryListEvent]' ||
             fakedColorStatus === COLOR_STATUS.NO_OVERWRITE
         ) {
-            return Function.prototype.apply.call(func, this, arguments);
+            return Function.prototype.apply.call(listener, this, arguments);
         }
 
         if (!dispatching && event.isTrusted) {
@@ -300,9 +316,9 @@ function makeListenerHook(func) {
             return;
         }
 
-        return Function.prototype.apply.call(func, this, arguments);
+        return Function.prototype.apply.call(listener, this, arguments);
     }, dummy, {
-        defineAs: func.name
+        defineAs: listener.name
     });
 }
 
