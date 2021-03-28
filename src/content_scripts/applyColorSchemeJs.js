@@ -39,7 +39,7 @@ const unsafeObjectCreate = window.wrappedJSObject.Object.create;
 // Whether we are dispatching "change" events
 let dispatching = false;
 
-/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, jsLastColorStatus:writable */
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, lastSeenJsColorStatus:writable */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction */
@@ -332,10 +332,10 @@ function makeListenerHook(listener) {
 function dispatchChangeEvents() {
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
         const systemMediaStatus = getSystemMediaStatus();
-        if (jsLastColorStatus === systemMediaStatus) {
+        if (lastSeenJsColorStatus === systemMediaStatus) {
             return;
         } else {
-            jsLastColorStatus = systemMediaStatus;
+            lastSeenJsColorStatus = systemMediaStatus;
         }
     }
 
@@ -376,9 +376,9 @@ function applyJsOverwrite() {
     }
 
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
-        jsLastColorStatus = getSystemMediaStatus();
+        lastSeenJsColorStatus = getSystemMediaStatus();
     } else {
-        jsLastColorStatus = fakedColorStatus;
+        lastSeenJsColorStatus = fakedColorStatus;
     }
 
     // actually overwrite

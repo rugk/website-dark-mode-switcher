@@ -9,7 +9,7 @@ let functionalMode = null;
 let fakedColorStatus = null;
 
 // last setting seen by js
-let jsLastColorStatus = null;
+let lastSeenJsColorStatus = null;
 
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
@@ -35,9 +35,9 @@ browser.storage.sync.get("fakedColorStatus").then((settings) => {
 
     fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
-        jsLastColorStatus = getSystemMediaStatus();
+        lastSeenJsColorStatus = getSystemMediaStatus();
     } else {
-        jsLastColorStatus = fakedColorStatus;
+        lastSeenJsColorStatus = fakedColorStatus;
     }
 });
 
