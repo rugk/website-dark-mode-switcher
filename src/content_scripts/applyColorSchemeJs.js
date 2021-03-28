@@ -267,7 +267,7 @@ const skeleton = {
         return Reflect.apply(originalOnChangeSetter, this, [hook]);
     },
 
-    addEventListener(type, listener, options) {
+    addEventListener(type, listener /* , options*/) {
         if (!checkIsMediaQueryList(this) ||
             type !== "change" ||
             typeof listener !== "function" ||
@@ -275,10 +275,11 @@ const skeleton = {
         ) {
             return Reflect.apply(originalAddEventListener, this, arguments);
         }
+        const options = arguments[2];
         const hook = trackOnListener(listener, this, false);
         return Reflect.apply(originalAddEventListener, this, ["change", hook, options]);
     },
-    removeEventListener(type, listener, options) {
+    removeEventListener(type, listener /* , options*/) {
         if (!checkIsMediaQueryList(this) ||
             type !== "change" ||
             typeof listener !== "function" ||
@@ -286,6 +287,7 @@ const skeleton = {
         ) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
         }
+        const options = arguments[2];
         const hook = trackOffListener(listener, this, false);
         if (!hook) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
@@ -441,3 +443,5 @@ function mayLogFakeWarning() {
         loggedFakedWarning = true;
     }
 }
+
+/* eslint-enable prefer-rest-params, no-setter-return */
