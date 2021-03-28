@@ -367,6 +367,7 @@ function applyJsOverwrite() {
     // do not overwrite twice
     if (overwroteMatchMedia) {
         dispatchChangeEvents();
+        jsLastColorStatus = fakedColorStatus;
         return;
     }
 
