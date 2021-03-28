@@ -337,6 +337,8 @@ function dispatchChangeEvents() {
         } else {
             lastSeenJsColorStatus = systemMediaStatus;
         }
+    } else {
+        lastSeenJsColorStatus = fakedColorStatus;
     }
 
     // [CAVEAT]
