@@ -328,10 +328,14 @@ function makeListenerHook(listener) {
  * @private
  */
 function dispatchChangeEvents() {
-    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE &&
-        jsLastColorStatus === getSystemMediaStatus()
-    ) {
-        return;
+    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
+        let systemMediaStatus = getSystemMediaStatus();
+        if (jsLastColorStatus === systemMediaStatus) {
+            return;
+        } else {
+            // eslint-disable-next-line no-global-assign
+            jsLastColorStatus = systemMediaStatus;
+        }
     }
 
     // [CAVEAT]
@@ -367,12 +371,16 @@ function applyJsOverwrite() {
     // do not overwrite twice
     if (overwroteMatchMedia) {
         dispatchChangeEvents();
-        jsLastColorStatus = fakedColorStatus;
         return;
     }
 
-    // eslint-disable-next-line no-global-assign
-    jsLastColorStatus = fakedColorStatus;
+    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
+        // eslint-disable-next-line no-global-assign
+        jsLastColorStatus = getSystemMediaStatus();
+    } else {
+        // eslint-disable-next-line no-global-assign
+        jsLastColorStatus = fakedColorStatus;
+    }
 
     // actually overwrite
 
