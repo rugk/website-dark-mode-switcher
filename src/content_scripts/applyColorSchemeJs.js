@@ -339,6 +339,8 @@ function dispatchChangeEvents() {
         } else {
             lastSeenJsColorStatus = systemMediaStatus;
         }
+    } else if (lastSeenJsColorStatus === fakedColorStatus) {
+        return;
     } else {
         lastSeenJsColorStatus = fakedColorStatus;
     }
