@@ -3,77 +3,47 @@ import * as BrowserCommunication from "/common/modules/BrowserCommunication/Brow
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
 
 const TAB_FILTER_URLS = ["<all_urls>"];
-let lastSettingsInjection = null;
+let lastContentScript = null;
 
 AddonSettings.setCaching(false);
-
-/**
- * Triggers the new setting in case it has been changed.
- *
- * @public
- * @returns {Promise}
- */
-export async function triggerNewColorStatus() {
-    // add new code injection and remove old one
-    if (lastSettingsInjection) {
-        (await lastSettingsInjection).unregister();
-    }
-    lastSettingsInjection = await enableSettingInjection();
-}
 
 /**
  * Adds a content script that is injected by Firefox and provides the preloaded
  * value of fakedColorStatus.
  *
  * @private
+ * @param {string} [fakedColorStatus]
  * @returns {Promise}
  */
-async function enableSettingInjection() {
-    const functionalMode = await AddonSettings.get("functionalMode");
-    const fakedColorStatus = await AddonSettings.get("fakedColorStatus");
+export async function injectContentScript(fakedColorStatus) {
+    const settings = {
+        fakedColorStatus: fakedColorStatus || await AddonSettings.get("fakedColorStatus"),
+        functionalMode: await AddonSettings.get("functionalMode")
+    };
 
-    return browser.contentScripts.register({
+    // add new code injection
+    const newContentScript = await browser.contentScripts.register({
         matches: TAB_FILTER_URLS,
         js: [{
-            code: `
-                    ${setSettings.toString()}
-                    setSettings(${functionalMode}, "${fakedColorStatus.toUpperCase()}");
+            code: `;
+                    var initialSettings = JSON.parse('${JSON.stringify(settings)}');
+                    if (typeof initializeContentScripts === "function") {
+                        initializeContentScripts(initialSettings);
+                    }
                 `,
         }],
         allFrames: true,
         matchAboutBlank: true,
         runAt: "document_start"
     });
-}
 
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-expressions */
-/**
- * Sets the settings inside of the content script.
- *
- * **Important:** Execute this *only* inside of the content script.
- *
- * @private
- * @param {bool} functionalModeNew
- * @param {string} fakedColorStatusNewString
- * @returns {void}
- */
-function setSettings(functionalModeNew, fakedColorStatusNewString) {
-    functionalMode = functionalModeNew;
-    // apply settings value if COLOR_STATUS is defined = common.js is loaded
-    if (typeof COLOR_STATUS !== "undefined" && COLOR_STATUS) {
-        fakedColorStatus = COLOR_STATUS[fakedColorStatusNewString];
-        console.log("setSettings(): new settings applied:", functionalMode, fakedColorStatusNewString);
-    } else {
-        // in case the common.js is not loaded yet retry setting value
-        console.log("setSettings(): COLOR_STATUS is not defined yet, try setting settings again in 100ms");
-        setTimeout(() => {
-            setSettings(functionalModeNew, fakedColorStatusNewString);
-        }, 100);
+    // remove old one
+    if (lastContentScript) {
+        lastContentScript.unregister();
     }
+
+    lastContentScript = newContentScript;
 }
-/* eslint-enable no-undef */
-/* eslint-enable no-unused-expressions */
 
 /**
  * Manually trigger overwriting CSS.
@@ -105,7 +75,7 @@ function triggerCssOverwrite(tab) {
  */
 export async function init() {
     // inject current preloaded setting to all tabs, so we have it as fast as possible
-    lastSettingsInjection = await enableSettingInjection();
+    await injectContentScript();
 
     // trigger CSS replace for existing tabs
     browser.tabs.query({
@@ -121,10 +91,10 @@ export async function init() {
 BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_SETTING, (request) => {
     console.info("Received new fakedColorStatus setting:", request);
 
-    return triggerNewColorStatus();
+    return injectContentScript();
 });
 BrowserCommunication.addListener(COMMUNICATION_MESSAGE_TYPE.NEW_ADDIONAL_SETTINGS, (request) => {
     console.info("Received new NEW_ADDIONAL_SETTINGS setting:", request);
 
-    return triggerNewColorStatus();
+    return injectContentScript();
 });

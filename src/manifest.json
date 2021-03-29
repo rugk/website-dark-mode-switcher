@@ -28,7 +28,8 @@
         "/content_scripts/common.js",
         "/content_scripts/applyColorSchemeJs.js",
         "/content_scripts/applyColorSchemeCss.js",
-        "/content_scripts/updateRequest.js"
+        "/content_scripts/updateRequest.js",
+        "/content_scripts/initialize.js"
       ],
       "all_frames": true,
       "match_about_blank": true,
