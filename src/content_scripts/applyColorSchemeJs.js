@@ -20,9 +20,9 @@ const weakmapFuncToEntry = new WeakMap();
 // hook -> func
 const weakmapHookToFunc = new WeakMap();
 
-const privilegedOnChangeGetter = Reflect.getOwnPropertyDescriptor(MediaQueryList.prototype, "onchange").get;
+const objectToString = Object.prototype.toString;
 
-const MediaQueryListPrototype = MediaQueryList.prototype.wrappedJSObject;
+const MediaQueryListPrototype = window.MediaQueryList.prototype.wrappedJSObject;
 const originalAddListener = MediaQueryListPrototype.addListener;
 const originalRemoveListener = MediaQueryListPrototype.removeListener;
 const originalMatchesGetter = Reflect.getOwnPropertyDescriptor(MediaQueryListPrototype, "matches").get;
@@ -42,7 +42,7 @@ let dispatching = false;
 /* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, lastSeenJsColorStatus:writable */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
-/* globals exportFunction */
+/* globals exportFunction, XPCNativeWrapper */
 
 /* eslint-disable prefer-rest-params, no-setter-return */
 
@@ -177,15 +177,19 @@ function trackOffListener(listener, mediaQueryList, isOnChange) {
 }
 
 /**
- * Check if an object is a MediaQueryList
- * The correctness of this relies on Firefox's XPCNativeWrapper
+ * Validate an object and its immediate prototype
+ * Implicitly relies on Firefox's XPCNativeWrapper
  *
  * @private
- * @param {function} obj
+ * @param {Object} obj
+ * @param {string} stringTag
  * @returns {boolean}
  */
-function checkIsMediaQueryList(obj) {
-    return (Object.prototype.toString.call(obj) === "[object MediaQueryList]");
+function validateObject(obj, stringTag) {
+    return (
+        objectToString.call(obj) === `[object ${stringTag}]` &&
+        objectToString.call(Reflect.getPrototypeOf(obj)) === `[object ${stringTag}]`
+    );
 }
 
 /**
@@ -194,21 +198,31 @@ function checkIsMediaQueryList(obj) {
  */
 const skeleton = {
     addListener(func) {
-        if (!checkIsMediaQueryList(this) ||
+        if (!validateObject(this, "MediaQueryList") ||
             typeof func !== "function" ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddListener, this, arguments);
         }
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "addListener" is called on a foreign MediaQueryList!');
+            // eslint-disable-next-line consistent-return
+            return;
+        }
         const hook = trackOnListener(func, this, false);
         return Reflect.apply(originalAddListener, this, [hook]);
     },
     removeListener(func) {
-        if (!checkIsMediaQueryList(this) ||
+        if (!validateObject(this, "MediaQueryList") ||
             typeof func !== "function" ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveListener, this, arguments);
+        }
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "removeListener" is called on a foreign MediaQueryList!');
+            // eslint-disable-next-line consistent-return
+            return;
         }
         const hook = trackOffListener(func, this, false);
         if (!hook) {
@@ -217,7 +231,8 @@ const skeleton = {
         return Reflect.apply(originalRemoveListener, this, [hook]);
     },
     get matches() {
-        if (!checkIsMediaQueryList(this) ||
+        if (!validateObject(this, "MediaQueryList") ||
+            !hasColorMediaQuery(this.media) ||
             fakedColorStatus === COLOR_STATUS.NO_OVERWRITE
         ) {
             return Reflect.apply(originalMatchesGetter, this, arguments);
@@ -230,34 +245,45 @@ const skeleton = {
         return result;
     },
     get onchange() {
-        if (!checkIsMediaQueryList(this) ||
+        if (!validateObject(this, "MediaQueryList") ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalOnChangeGetter, this, arguments);
         }
-        const hook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
-        if (typeof hook !== "function") {
-            return hook;
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "get onchange" is called on a foreign MediaQueryList!');
+            return null;
         }
+        const unsafeHook = Reflect.apply(originalOnChangeGetter, this, arguments);
+        if (typeof unsafeHook !== "function") {
+            return unsafeHook;
+        }
+        const hook = XPCNativeWrapper(unsafeHook);
         const func = weakmapHookToFunc.get(hook);
         if (typeof func !== "function") {
-            console.error('[website-dark-mode-switcher] someone called "get onchange" on an unknown MediaQueryList!');
+            console.warn('[website-dark-mode-switcher] "get onchange" is called on an unknown MediaQueryList!');
             return null;
         }
         return func;
     },
     set onchange(func) {
-        if (!checkIsMediaQueryList(this) ||
+        if (!validateObject(this, "MediaQueryList") ||
             typeof func !== "function" ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalOnChangeSetter, this, arguments);
         }
-        const oldHook = Reflect.apply(privilegedOnChangeGetter, this, arguments);
-        if (typeof oldHook === "function") {
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "set onchange" is called on a foreign MediaQueryList!');
+            // eslint-disable-next-line consistent-return
+            return;
+        }
+        const unsafeOldHook = Reflect.apply(originalOnChangeGetter, this, arguments);
+        if (typeof unsafeOldHook === "function") {
+            const oldHook = XPCNativeWrapper(unsafeOldHook);
             const oldFunc = weakmapHookToFunc.get(oldHook);
             if (typeof oldFunc !== "function") {
-                console.error('[website-dark-mode-switcher] someone called "set onchange" on an unknown MediaQueryList!');
+                console.warn('[website-dark-mode-switcher] "set onchange" is called on an unknown MediaQueryList!');
                 // eslint-disable-next-line consistent-return
                 return;
             }
@@ -267,25 +293,35 @@ const skeleton = {
         return Reflect.apply(originalOnChangeSetter, this, [hook]);
     },
 
-    addEventListener(type, listener /* , options*/) {
-        if (!checkIsMediaQueryList(this) ||
+    addEventListener(type, listener /* , options */) {
+        if (!validateObject(this, "MediaQueryList") ||
             type !== "change" ||
             typeof listener !== "function" ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalAddEventListener, this, arguments);
         }
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "addEventListener" is called on a foreign MediaQueryList!');
+            // eslint-disable-next-line consistent-return
+            return;
+        }
         const options = arguments[2];
         const hook = trackOnListener(listener, this, false);
         return Reflect.apply(originalAddEventListener, this, ["change", hook, options]);
     },
-    removeEventListener(type, listener /* , options*/) {
-        if (!checkIsMediaQueryList(this) ||
+    removeEventListener(type, listener /* , options */) {
+        if (!validateObject(this, "MediaQueryList") ||
             type !== "change" ||
             typeof listener !== "function" ||
             !hasColorMediaQuery(this.media)
         ) {
             return Reflect.apply(originalRemoveEventListener, this, arguments);
+        }
+        if (this.constructor !== window.MediaQueryList) {
+            console.warn('[website-dark-mode-switcher] "removeEventListener" is called on a foreign MediaQueryList!');
+            // eslint-disable-next-line consistent-return
+            return;
         }
         const options = arguments[2];
         const hook = trackOffListener(listener, this, false);
@@ -306,7 +342,7 @@ const skeleton = {
 function makeListenerHook(listener) {
     const dummy = unsafeObjectCreate(null);
     return exportFunction(function(event) {
-        if (Object.prototype.toString.call(event) !== "[object MediaQueryListEvent]" ||
+        if (validateObject(event, "MediaQueryListEvent") ||
             fakedColorStatus === COLOR_STATUS.NO_OVERWRITE
         ) {
             return Function.prototype.apply.call(listener, this, arguments);
