@@ -1,5 +1,6 @@
 # Contributors
 
+* @tartpvule
 * @ENT8R
 * Kyle Copperfield (@kmcopper)
 
@@ -12,4 +13,3 @@
 ### Turkish
 
 - Ömür Turan ([@omurturan](https://github.com/omurturan))
-
