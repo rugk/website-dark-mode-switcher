@@ -8,7 +8,11 @@
 /* globals initializeUpdateRequest, initializeApplyColorSchemeCss, initializeApplyColorSchemeJs */
 /* globals functionalMode:writable, fakedColorStatus:writable, COLOR_STATUS */
 
-// initial settings at document-start, will be filled by a dynamic content script
+/**
+ * Initial settings at document-start, will be filled by a dynamic content script
+ * Using "var" here because of Temporal Dead Zone
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone_tdz}
+ */
 // eslint-disable-next-line no-var
 var initialSettings;
 
