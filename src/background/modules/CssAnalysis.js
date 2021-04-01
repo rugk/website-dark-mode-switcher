@@ -25,7 +25,7 @@ export async function injectContentScript(fakedColorStatus) {
     const newContentScript = await browser.contentScripts.register({
         matches: TAB_FILTER_URLS,
         js: [{
-            code: `;
+            code: `
                     var initialSettings = JSON.parse('${JSON.stringify(settings)}');
                     if (typeof initializeContentScripts === "function") {
                         initializeContentScripts(initialSettings);
