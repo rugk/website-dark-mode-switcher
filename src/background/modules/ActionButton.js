@@ -51,7 +51,7 @@ function adjustUserIndicator(newColorSetting) {
  *
  * @function
  * @private
- * @param  {boolean} newColorSetting
+ * @param  {string} newColorSetting
  * @returns {void}
  */
 function propagateNewSetting(newColorSetting) {
@@ -60,6 +60,9 @@ function propagateNewSetting(newColorSetting) {
         fakedColorStatus: newColorSetting,
         source: COMMUNICATION_MESSAGE_SOURCE.BROWSER_ACTION
     };
+
+    // reinject new setting
+    CssAnalysis.injectContentScript(fakedColorStatus);
 
     // send to all tabs
     browser.tabs.query({
@@ -95,7 +98,6 @@ export async function init() {
         propagateNewSetting(fakedColorStatus);
         adjustUserIndicator(fakedColorStatus);
         await AddonSettings.set("fakedColorStatus", fakedColorStatus);
-        CssAnalysis.triggerNewColorStatus();
     });
     browser.browserAction.setBadgeTextColor({
         color: BADGE_COLOR

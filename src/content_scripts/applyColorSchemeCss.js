@@ -232,7 +232,19 @@ function applyStyleOnFail() {
     }
 }
 
-// apply style when DOM content is loaded
-document.addEventListener("DOMContentLoaded", applyWantedStyle);
-// apply style when content is fully loaded
-window.addEventListener("load", applyStyleOnFail);
+/* eslint-disable no-unused-vars */
+
+/**
+ * Initialize applyColorSchemeCss.js
+ *
+ * @public
+ * @returns {void}
+ */
+function initializeApplyColorSchemeCss() {
+    // apply style when DOM content is loaded
+    document.addEventListener("DOMContentLoaded", applyWantedStyle);
+    // apply style when content is fully loaded
+    window.addEventListener("load", applyStyleOnFail);
+}
+
+/* eslint-enable no-unused-vars */

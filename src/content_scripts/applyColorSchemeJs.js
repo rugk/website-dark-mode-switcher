@@ -6,8 +6,6 @@
 
 "use strict";
 
-let overwroteMatchMedia = false;
-
 const ADDON_FAKED_WARNING = "MediaQueryList has been faked by add-on website-dark-mode-switcher; see https://github.com/rugk/website-dark-mode-switcher/. If it causes any problems, please open an issue.";
 let loggedFakedWarning = false;
 
@@ -39,12 +37,13 @@ const unsafeObjectCreate = window.wrappedJSObject.Object.create;
 // Whether we are dispatching "change" events
 let dispatching = false;
 
-/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus, lastSeenJsColorStatus:writable */
+// last setting seen by js
+let lastSeenJsColorStatus = null;
+
+/* globals COLOR_STATUS, MEDIA_QUERY_COLOR_SCHEME, MEDIA_QUERY_PREFER_COLOR, fakedColorStatus, getSystemMediaStatus */
 
 // eslint does not include X-Ray vision functions, see https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
 /* globals exportFunction, XPCNativeWrapper */
-
-/* eslint-disable prefer-rest-params, no-setter-return */
 
 /**
  * Returns the COLOR_STATUS for a media query string.
@@ -191,6 +190,8 @@ function validateObject(obj, stringTag) {
         objectToString.call(Reflect.getPrototypeOf(obj)) === `[object ${stringTag}]`
     );
 }
+
+/* eslint-disable prefer-rest-params, no-setter-return */
 
 /**
  * Kludge "skeleton" to make exportFunction()-ed .name and .toString() as expected.
@@ -361,6 +362,8 @@ function makeListenerHook(listener) {
     });
 }
 
+/* eslint-enable prefer-rest-params, no-setter-return */
+
 /**
  * Dispatch artificial "change" events
  *
@@ -405,25 +408,42 @@ function dispatchChangeEvents() {
 }
 
 /**
- * Apply the JS overwrite.
+ * Logs ADDON_FAKED_WARNING if not already did
  *
- * @function
+ * @private
  * @returns {void}
  */
-function applyJsOverwrite() {
-    // do not overwrite twice
-    if (overwroteMatchMedia) {
-        dispatchChangeEvents();
-        return;
+function mayLogFakeWarning() {
+    if (!loggedFakedWarning) {
+        console.log(ADDON_FAKED_WARNING);
+        loggedFakedWarning = true;
     }
+}
 
+/* eslint-disable no-unused-vars */
+
+/**
+ * Do things on settings change
+ *
+ * @public
+ * @returns {void}
+ */
+function applyNewSettingsJs() {
+    dispatchChangeEvents();
+}
+
+/**
+ * Initialize applyColorSchemeJs.js
+ *
+ * @public
+ * @returns {void}
+ */
+function initializeApplyColorSchemeJs() {
     if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
         lastSeenJsColorStatus = getSystemMediaStatus();
     } else {
         lastSeenJsColorStatus = fakedColorStatus;
     }
-
-    // actually overwrite
 
     Reflect.defineProperty(MediaQueryListPrototype, "addListener", {
         configurable: true,
@@ -463,23 +483,6 @@ function applyJsOverwrite() {
         value: exportFunction(skeleton.removeEventListener, window),
         writable: true
     });
-
-    overwroteMatchMedia = true;
 }
 
-applyJsOverwrite();
-
-/**
- * Logs ADDON_FAKED_WARNING if not already did
- *
- * @private
- * @returns {void}
- */
-function mayLogFakeWarning() {
-    if (!loggedFakedWarning) {
-        console.log(ADDON_FAKED_WARNING);
-        loggedFakedWarning = true;
-    }
-}
-
-/* eslint-enable prefer-rest-params, no-setter-return */
+/* eslint-enable no-unused-vars */
