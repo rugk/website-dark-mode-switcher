@@ -5,7 +5,7 @@
 /* globals fakedColorStatus, functionalMode */ // eslint-disable-line no-unused-vars
 
 // other parts of add-on
-/* globals COLOR_STATUS, applyJsOverwrite, applyWantedStyle */
+/* globals COLOR_STATUS, applyNewSettingsJs, applyWantedStyle */
 
 const NEW_SETTING = "newSetting";
 const NEW_SETTING_ADDITIONAL = "newSettingAdditional";
@@ -24,7 +24,7 @@ function processMessage(request) {
         fakedColorStatus = COLOR_STATUS[request.fakedColorStatus.toUpperCase()]; // eslint-disable-line no-unused-vars
 
         // trigger functions
-        applyJsOverwrite(); // actually does not need to be retriggered, as the JS-overwrite does not need to be recreated
+        applyNewSettingsJs();
         applyWantedStyle();
         break;
     case NEW_SETTING_ADDITIONAL:
@@ -38,5 +38,17 @@ function processMessage(request) {
     }
 }
 
-// add listener for incoming messages
-browser.runtime.onMessage.addListener(processMessage);
+/* eslint-disable no-unused-vars */
+
+/**
+ * Initialize updateRequest.js
+ *
+ * @public
+ * @returns {void}
+ */
+function initializeUpdateRequest() {
+    // add listener for incoming messages
+    browser.runtime.onMessage.addListener(processMessage);
+}
+
+/* eslint-enable no-unused-vars */

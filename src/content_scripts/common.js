@@ -8,9 +8,6 @@
 let functionalMode = null;
 let fakedColorStatus = null;
 
-// last setting seen by js
-let lastSeenJsColorStatus = null;
-
 /* @see {@link https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme} */
 const COLOR_STATUS = Object.freeze({
     LIGHT: Symbol("prefers-color-scheme: light"),
@@ -26,19 +23,6 @@ const MEDIA_QUERY_PREFER_COLOR = Object.freeze({
     [COLOR_STATUS.LIGHT]: /^\s*\(prefers-color-scheme:\s*light\)\s*$/,
     [COLOR_STATUS.DARK]: /^\s*\(prefers-color-scheme:\s*dark\)\s*$/,
     [COLOR_STATUS.NO_PREFERENCE]: /^\s*\(prefers-color-scheme:\s*no-preference\)\s*$/,
-});
-
-// request and update setting as fast as possible
-browser.storage.sync.get("fakedColorStatus").then((settings) => {
-    // ATTENTION: hardcoded default value here!
-    const newSetting = settings.fakedColorStatus || "dark";
-
-    fakedColorStatus = COLOR_STATUS[newSetting.toUpperCase()];
-    if (fakedColorStatus === COLOR_STATUS.NO_OVERWRITE) {
-        lastSeenJsColorStatus = getSystemMediaStatus();
-    } else {
-        lastSeenJsColorStatus = fakedColorStatus;
-    }
 });
 
 /**
