@@ -2,16 +2,16 @@ import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
 import * as BrowserCommunication from "/common/modules/BrowserCommunication/BrowserCommunication.js";
 import { COMMUNICATION_MESSAGE_TYPE } from "/common/modules/data/BrowserCommunicationTypes.js";
 import { COMMUNICATION_MESSAGE_SOURCE } from "/common/modules/data/BrowserCommunicationTypes.js";
-
-import * as CssAnalysis from "./CssAnalysis.js";
-
-const TAB_FILTER_URLS = ["<all_urls>"];
+import { isControllable } from "/common/modules/BrowserSettings/BrowserSettings.js";
 
 const BADGE_BACKGROUND_COLOR = "rgba(48, 48, 48, 0)";
 const BADGE_COLOR = ""; // = "auto"
 
 // currently loaded setting
 let fakedColorStatus;
+
+// shorten API
+const overrideContentColorScheme = browser.browserSettings.overrideContentColorScheme;
 
 /**
  * Load the current status of the option.
@@ -52,29 +52,29 @@ function adjustUserIndicator(newColorSetting) {
  * @function
  * @private
  * @param  {string} newColorSetting
- * @returns {void}
+ * @returns {Promise}
  */
-function propagateNewSetting(newColorSetting) {
+async function propagateNewSetting(newColorSetting) {
     const newSettingsMessage = {
         type: COMMUNICATION_MESSAGE_TYPE.NEW_SETTING,
         fakedColorStatus: newColorSetting,
         source: COMMUNICATION_MESSAGE_SOURCE.BROWSER_ACTION
     };
 
-    // reinject new setting
-    CssAnalysis.injectContentScript(fakedColorStatus);
+    const currentBrowserSetting = await overrideContentColorScheme.get({});
+    console.log('current browser setting for overrideContentColorScheme:', currentBrowserSetting);
 
-    // send to all tabs
-    browser.tabs.query({
-        url: TAB_FILTER_URLS
-    }).then((tabs) => {
-        return Promise.all(tabs.map((tab) => {
-            browser.tabs.sendMessage(tab.id, newSettingsMessage);
-        }));
+    if (!isControllable(currentBrowserSetting.levelOfControl)) {
+        throw Error("Browser setting is not controllable.");
+    }
+
+    const couldBeModified = await overrideContentColorScheme.set({
+        value: newColorSetting
     });
 
-    // send to own background script
-    browser.runtime.sendMessage(newSettingsMessage);
+    if (!couldBeModified) {
+        throw Error("Browser setting could not be modified.");
+    }
 }
 
 /**
@@ -90,20 +90,27 @@ export async function init() {
 
     browser.browserAction.onClicked.addListener(async () => {
         if (fakedColorStatus === "dark") {
-            fakedColorStatus = "no_overwrite";
+            fakedColorStatus = "light";
         } else { // if = light
             fakedColorStatus = "dark";
         }
 
-        propagateNewSetting(fakedColorStatus);
+        await propagateNewSetting(fakedColorStatus).catch(console.error);
         adjustUserIndicator(fakedColorStatus);
-        await AddonSettings.set("fakedColorStatus", fakedColorStatus);
+        await AddonSettings.set("fakedColorStatus", fakedColorStatus).catch(console.error);
     });
     browser.browserAction.setBadgeTextColor({
         color: BADGE_COLOR
     });
     browser.browserAction.setBadgeBackgroundColor({
         color: BADGE_BACKGROUND_COLOR
+    });
+
+    overrideContentColorScheme.onChange.addListener(async (details) => {
+        var currentValue = details.value;
+        console.log('currentValue', currentValue);
+        fakedColorStatus = currentValue;
+        adjustUserIndicator(fakedColorStatus);
     });
 
     // receive new setting changed by settingspage

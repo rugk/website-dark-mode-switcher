@@ -21,22 +21,6 @@
     ]
   },
 
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "/content_scripts/common.js",
-        "/content_scripts/applyColorSchemeJs.js",
-        "/content_scripts/applyColorSchemeCss.js",
-        "/content_scripts/updateRequest.js",
-        "/content_scripts/initialize.js"
-      ],
-      "all_frames": true,
-      "match_about_blank": true,
-      "run_at": "document_start"
-    }
-  ],
-
   "options_ui": {
     "page": "options/options.html",
     "browser_style": true
@@ -67,14 +51,13 @@
 
   "permissions": [
     "storage",
-    "tabs",
-    "<all_urls>"
+    "browserSettings"
   ],
 
   "applications": {
     "gecko": {
       "id": "dark-mode-website-switcher@rugk.github.io",
-      "strict_min_version": "67.0a1"
+      "strict_min_version": "95.0a1"
     }
   }
 }

@@ -60,6 +60,24 @@
     "description": "The message shown in the options discouraging the user from changing the settings."
   },
 
+  // browser setting - list of levels of control
+  "browserSettingLevelOfControlNotControllable": {
+    "message": "This browser setting cannot be controlled by the extension.",
+    "description": "The mexplanation for a level of control of a browser setting that an extension has over such a setting. See https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/types/BrowserSetting/get"
+  },
+  "browserSettingLevelOfControlControlledByOtherExtensions": {
+    "message": "This browser setting cannot be controlled by this extension, because another extension already controls it.",
+    "description": "The mexplanation for a level of control of a browser setting that an extension has over such a setting. See https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/types/BrowserSetting/get"
+  },
+  "browserSettingLevelOfControlControllableByThisExtension": {
+    "message": "This browser setting can be controlled by this extension.",
+    "description": "The mexplanation for a level of control of a browser setting that an extension has over such a setting. See https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/types/BrowserSetting/get"
+  },
+  "browserSettingLevelOfControlControlledByThisExtensionExplanation": {
+    "message": "This browser setting is currently being controlled by this extension.",
+    "description": "The mexplanation for a level of control of a browser setting that an extension has over such a setting. See https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/types/BrowserSetting/get"
+  },
+
   // badges
   "badgeLight": {
     "message": "",
