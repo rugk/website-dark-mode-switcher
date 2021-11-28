@@ -91,24 +91,6 @@
     "message": "Um das Add-on zu aktivieren oder zu deaktivieren und so eine Webseite in den dunklen Modus zu verwandeln, klicke auf das Toolbar-Symbol oder presse die Tastenkombination (anpassbar in den Tastenkombinationen-Add-on-Einstellungen von Firefox). Beachte, dass du in einigen Fällen die Webseite eventuell neu laden musst.",
     "description": "A description in the settings explaining the usage of the add-on."
   },
-  "devToolsHint": {
-    "message": "Wenn du Webseiten entwickelst, kannst du auch $LINK$ zum Testen von Webseiten aktivieren.",
-    "description": "A description in the settings giving a hint to developers for an about:config preference that enables them to toggle the dark mode there.",
-    "placeholders": {
-      "link": {
-        "content": "$1",
-        "example": "<a href=\"https://stackoverflow.com/q/56401662/5008962\">a hidden Firefox preference</a>"
-      }
-    }
-  },
-  "devToolsHintLink": {
-    "message": "https://stackoverflow.com/q/56401662/5008962",
-    "description": "The link to a useful ressource that explains how to activate and use the color-scheme dev-tool component of Firefox."
-  },
-  "devToolsHintLinkText": {
-    "message": "eine versteckte Firefox-Einstellung (englisch)",
-    "description": "The link text for the link given in devToolsHintLink. Make sure it fits into the sentence. Please make the reader aware of the link is in foreign language."
-  },
   "settingIntroHelpRestrictions": {
     "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen. Ebenso kann sie im Normalfall nicht den hellen Modus einer Webseite erzwingen und funktioniert somit nur, wenn der Systemstil auf „dunkel“ steht.",
     "description": "A description in the settings explaining the restrictions of the add-on."
