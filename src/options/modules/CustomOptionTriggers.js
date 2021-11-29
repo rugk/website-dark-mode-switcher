@@ -21,6 +21,17 @@ function applyFakedColorStatus(optionValue) {
 }
 
 /**
+ * Apply the setting and show it as the used one.
+ *
+ * @param {string} currentSetting The settting to show as the currently selected one.
+ * @returns {void}
+ */
+function applySetting(currentSetting) {
+    const newColorSettingInput = document.getElementById("fakedColorStatus");
+    newColorSettingInput.value = currentSetting;
+}
+
+/**
  * Binds the triggers.
  *
  * This is basically the "init" method.
@@ -33,4 +44,9 @@ export function registerTrigger() {
 
     // handle loading of options correctly
     AutomaticSettings.Trigger.registerAfterLoad(AutomaticSettings.Trigger.RUN_ALL_SAVE_TRIGGER);
+
+    DarkModeLogic.registerChangeListener(applySetting);
+    DarkModeLogic.getCurrentState().then((currentSetting) => {
+        applySetting(currentSetting);
+    });
 }
