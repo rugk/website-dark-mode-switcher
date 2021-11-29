@@ -59,12 +59,6 @@
 
 			<section>
 				<h1 data-i18n="__MSG_titleAdvancedOptions__">Advanced options</h1>
-				<div class="message-container">
-
-						<div id="messageAdvancedSettungs" aria-label="warning message" data-i18n data-i18n-aria-label="__MSG_ariaMessageSuccess__" class="message-box warning">
-							<span data-i18n="__MSG_warningAdvancedSettings__" class="message-text">Attention: These are advanced settings and should only be changed if you know what you are doing! In case of error, please reset the changes.</span>
-						</div>
-				</div>
 				<ul>
 					<li class="line alignoption">
 						<label for="fakedColorStatus" data-i18n="__MSG_optionsWebsiteStyle__">Website style: </label>
@@ -74,24 +68,6 @@
 							<option data-i18n="__MSG_optionsWebsiteStyleNoPreference__" value="no_preference">No special preference</option>
 							<option data-i18n="__MSG_optionsWebsiteStyleSystem__" value="no_overwrite">System (do not overwrite)</option>
 						</select>
-					</li>
-					<div class="message-container line">
-						<div id="messageWarningRareStyleSetting" aria-label="info message" data-i18n data-i18n-aria-label="__MSG_ariaMessageInfo__" class="message-box info invisible fade-hide">
-							<span class="message-text">Due to the way most websites implement their styling, this option may not work on many websites.</span>
-							<a href="#">
-								<button type="button" class="message-action-button micro-button info invisible"></button>
-							</a>
-							<img class="icon-dismiss invisible" src="/common/img/close.svg" width="24" height="24" tabindex="0" data-i18n data-i18n-aria-label="__MSG_dismissIconDescription__"></span>
-						</div>
-					</div>
-					<li>
-						<div class="line">
-							<input class="setting save-on-change" type="checkbox" id="functionalMode" name="functionalMode">
-							<label data-i18n="__MSG_optionFunctionalMode__" for="functionalMode">Use the functional implementation for parsing the website's style sheets (CSS).</label>
-						</div>
-		          		<div class="line indent">
-							<span data-i18n="__MSG_optionFunctionalModeDescr__" class="helper-text">This option is currently not recommened, as the functional implementation may not work on some sites due to memory constraints. Only change it for debugging.</span>
-						</div>
 					</li>
 				</ul>
 			</section>
