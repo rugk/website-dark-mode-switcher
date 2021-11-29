@@ -92,7 +92,7 @@
     "description": "A description in the settings explaining the usage of the add-on."
   },
   "settingIntroHelpRestrictions": {
-    "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen. Ebenso kann sie im Normalfall nicht den hellen Modus einer Webseite erzwingen und funktioniert somit nur, wenn der Systemstil auf „dunkel“ steht.",
+    "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen.",
     "description": "A description in the settings explaining the restrictions of the add-on."
   },
 

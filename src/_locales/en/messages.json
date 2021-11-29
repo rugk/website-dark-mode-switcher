@@ -120,7 +120,7 @@
     "description": "A description in the settings explaining the usage of the add-on."
   },
   "settingIntroHelpRestrictions": {
-    "message": "Please be aware that this extension only works on websites that support the dark styling. In addition, it usually cannot force the light mode of a website and thus only works if the system setting is set to “dark”.",
+    "message": "Please be aware that this extension only works on websites that support the dark styling.",
     "description": "A description in the settings explaining the restrictions of the add-on."
   },
 
