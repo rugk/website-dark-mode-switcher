@@ -59,14 +59,17 @@
 
 			<section>
 				<h1 data-i18n="__MSG_titleAdvancedOptions__">Advanced options</h1>
-				<ul>
-					<li class="line alignoption">
-						<label for="fakedColorStatus" data-i18n="__MSG_optionsWebsiteStyle__">Website style: </label>
-						<select id="fakedColorStatus" class="setting save-on-change" name="fakedColorStatus" size="4">
+				<ul class="">
+					<li class="line">
+						<label for="prefersColorSchemeOverride" data-i18n="__MSG_optionsWebsiteStyle__">Website style: </label>
+					</li>
+					<li>
+						<select id="prefersColorSchemeOverride" class="setting save-on-change" name="prefersColorSchemeOverride" size="4">
 							<option data-i18n="__MSG_optionsWebsiteStyleLight__" value="light">Light</option>
 							<option data-i18n="__MSG_optionsWebsiteStyleDark__" value="dark">Dark</option>
-							<option data-i18n="__MSG_optionsWebsiteStyleNoPreference__" value="no_preference">No special preference</option>
-							<option data-i18n="__MSG_optionsWebsiteStyleSystem__" value="no_overwrite">System (do not overwrite)</option>
+							<option data-i18n="__MSG_optionsWebsiteStyleSystem__" value="system">Follow the system/device's theme</option>
+							<option data-i18n="__MSG_optionsWebsiteStyleBrowser__" value="browser">Follow the browser's theme</option>
+							<!-- <option data-i18n="__MSG_optionsWebsiteStyleNull__" value="null">Do not overwrite (Disables this add-on)</option> -->
 						</select>
 					</li>
 				</ul>

@@ -136,12 +136,16 @@
     "message": "Dark",
     "description": "The add-on option for optionsWebsiteStyle."
   },
-  "optionsWebsiteStyleNoPreference": {
-    "message": "No special preference",
-    "description": "The add-on option for optionsWebsiteStyle. Explicitly opt-in into not preferring any style."
-  },
   "optionsWebsiteStyleSystem": {
-    "message": "System (do not overwrite)",
+    "message": "Follow the system/device's theme",
+    "description": "The add-on option for optionsWebsiteStyle. The style is adopted from the system/device here."
+  },
+  "optionsWebsiteStyleBrowser": {
+    "message": "Follow the browser's theme",
+    "description": "The add-on option for optionsWebsiteStyle. The style is adopted from the browser theme here."
+  },
+  "optionsWebsiteStyleNull": {
+    "message": "Do not overwrite (Disables this add-on)",
     "description": "The add-on option for optionsWebsiteStyle. It basically just disables the add-on."
   },
 

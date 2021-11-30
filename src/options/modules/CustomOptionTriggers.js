@@ -16,7 +16,7 @@ import * as DarkModeLogic from "/common/modules/DarkModeLogic.js";
  * @param  {string} [option]
  * @returns {Promise}
  */
-function applyFakedColorStatus(optionValue) {
+function applyPrefersColorSchemeOverride(optionValue) {
     return DarkModeLogic.applySetting(optionValue);
 }
 
@@ -27,7 +27,7 @@ function applyFakedColorStatus(optionValue) {
  * @returns {void}
  */
 function applySetting(currentSetting) {
-    const newColorSettingInput = document.getElementById("fakedColorStatus");
+    const newColorSettingInput = document.getElementById("prefersColorSchemeOverride");
     newColorSettingInput.value = currentSetting;
 }
 
@@ -40,7 +40,7 @@ function applySetting(currentSetting) {
  * @returns {void}
  */
 export function registerTrigger() {
-    AutomaticSettings.Trigger.registerSave("fakedColorStatus", applyFakedColorStatus);
+    AutomaticSettings.Trigger.registerSave("prefersColorSchemeOverride", applyPrefersColorSchemeOverride);
 
     // handle loading of options correctly
     AutomaticSettings.Trigger.registerAfterLoad(AutomaticSettings.Trigger.RUN_ALL_SAVE_TRIGGER);

@@ -11,22 +11,37 @@ import { isControllable } from "/common/modules/BrowserSettings/BrowserSettings.
  */
 
 /**
+ * A map of all possible color schemes supported by the API.
+ *
+ * @const
+ * @type {Object.<string, string|null>}
+ * @see {@link https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/browserSettings/overrideContentColorScheme}
+ */
+export const COLOR_OVERRIDE = Object.freeze({
+    LIGHT: "light",
+    DARK: "dark",
+    SYSTEM: "system",
+    BROWSER: "browser",
+    NULL: null
+});
+
+/**
  * @type {changeTrigger[]}
  */
 const onChangeCallbacks = [];
 
 /**
- * Switch the dark mode
+ * Switch the dark mode from on to off or inverse.
  *
  * @returns {Promise}
  */
 export async function toggleDarkMode() {
     const currentBrowserSetting = await getCurrentState();
     let newBrowserSetting = "";
-    if (currentBrowserSetting === "dark") {
-        newBrowserSetting = "light";
-    } else { // if = light
-        newBrowserSetting = "dark";
+    if (currentBrowserSetting === COLOR_OVERRIDE.DARK) {
+        newBrowserSetting = COLOR_OVERRIDE.LIGHT;
+    } else { // if = COLOR_OVERRIDE.LIGHT
+        newBrowserSetting = COLOR_OVERRIDE.DARK;
     }
 
     await applySetting(newBrowserSetting);
@@ -43,7 +58,7 @@ export async function getCurrentState() {
 
     // if (shouldBeSynced) {
     //     const currentBrowserSetting = (await browser.browserSettings.overrideContentColorScheme.get({})).value;
-    //     const syncedSetting = await AddonSettings.get("fakedColorStatus");
+    //     const syncedSetting = await AddonSettings.get("prefersColorSchemeOverride");
     //     if (currentBrowserSetting !== syncedSetting) {
     //         await applySetting(syncedSetting);
     //     }
@@ -56,7 +71,9 @@ export async function getCurrentState() {
 /**
  * Apply the provided style.
  *
- * @param {string} newOption
+ * A value of "null", given as a string or literal, resets the setting, so other extensions or similar can override it.
+ *
+ * @param {string|null} newOption of COLOR_OVERRIDE
  * @returns {Promise}
  * @throws {Error}
  */
@@ -68,15 +85,20 @@ export async function applySetting(newOption) {
         throw Error("Browser setting is not controllable.");
     }
 
-    const couldBeModified = await browser.browserSettings.overrideContentColorScheme.set({
-        value: newOption
-    });
+    let couldBeModified;
+    if (newOption === "null" || newOption === null) {
+        couldBeModified = await browser.browserSettings.overrideContentColorScheme.clear({});
+    } else {
+        couldBeModified = await browser.browserSettings.overrideContentColorScheme.set({
+            value: newOption
+        });
+    }
 
     if (!couldBeModified) {
         throw Error("Browser setting could not be modified.");
     }
 
-    await AddonSettings.set("fakedColorStatus", newOption);
+    await AddonSettings.set("prefersColorSchemeOverride", newOption);
 }
 
 /**
