@@ -1,11 +1,11 @@
 {
   // manifest.json
   "extensionName": {
-    "message": "Dark Website Forcer",
+    "message": "Dark Mode Website Switcher",
     "description": "Name of the extension."
   },
   "extensionNameShort": {
-    "message": "Dark Website Forcer",
+    "message": "Dark Mode Website Switcher",
     "description": "Name of the extension."
   },
   "extensionDescription": {
@@ -92,8 +92,12 @@
     "description": "A description in the settings explaining the usage of the add-on."
   },
   "settingIntroHelpRestrictions": {
-    "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen. Ebenso kann sie im Normalfall nicht den hellen Modus einer Webseite erzwingen und funktioniert somit nur, wenn der Systemstil auf „dunkel“ steht.",
+    "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen.",
     "description": "A description in the settings explaining the restrictions of the add-on."
+  },
+  "settingIntroBehaviour": {
+    "message": "Mit den folgenden Optionen kannst du den aktuellen Stil und die beiden Zustände ändern, in die der Knopf des Add-ons wechselt, wenn dieser angeklickt wird.",
+    "description": "A description in the settings explaining what can be adjusted in the behaviour section."
   },
 
   "optionsWebsiteStyle": {

@@ -12,3 +12,4 @@ import * as CustomOptionTriggers from "./modules/CustomOptionTriggers.js";
 CustomOptionTriggers.registerTrigger();
 AutomaticSettings.setDefaultOptionProvider(AddonSettings.getDefaultValue);
 AutomaticSettings.init();
+
