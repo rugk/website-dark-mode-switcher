@@ -16,23 +16,11 @@ Test websites:
 * https://emojipedia.org/
 * https://bugzilla.mozilla.org/
 
-This extension only works with modern Firefox v67 or higher, as this is the first version that supports this feature.
+This extension only works with modern Firefox v95 or higher. Versions [before v1.0](./releases) do support older browser versions, but use a more error-prone way of darkening websites.
 
 ## Download
 
 **[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=download-button&campaign=github)**
-
-## Important limitations!
-
-Note this is quite restricted in real-world usage.
-If you just want to have dark pages (with a light system style), it will usually work fine, but everything else is hardly possible. Also there may be edge-cases, where things break. (But please report bugs, anyway. It's good to know what/if websites break.)
-To improve this situation Firefox would need to get a proper API.
-
-The technical story on why this is so hard to overwrite CSS like that in an add-on [is described on Stackoverflow by me](https://stackoverflow.com/a/55910185/5008962), but basically I needed extract the CSS manually and manually apply it afterwards. And it requires an not-so-easy JS overwrite needed, too, BTW…
-
-That's why I've requested a [better API on Bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1547818) (feel free to upvote, if you want this, too!).
-
-For this reason, the add-on is currently named “**Dark Website Forcer**”. This makes it more obvious to the user, that it _cannot force_ a light website.
 
 ## Contribute
 
