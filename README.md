@@ -16,7 +16,7 @@ Test websites:
 * https://emojipedia.org/
 * https://bugzilla.mozilla.org/
 
-This extension only works with modern Firefox v95 or higher. Versions [before v1.0](../releases) do support older browser versions, but use a more error-prone way of darkening websites.
+This extension only works with modern Firefox v95 or higher. Versions [before v1.0](../../releases) do support older browser versions, but use a more error-prone way of darkening websites.
 
 ## Download
 
