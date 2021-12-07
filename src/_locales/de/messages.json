@@ -1,11 +1,11 @@
 {
   // manifest.json
   "extensionName": {
-    "message": "Dark Website Forcer",
+    "message": "Dark Mode Website Switcher",
     "description": "Name of the extension."
   },
   "extensionNameShort": {
-    "message": "Dark Website Forcer",
+    "message": "Dark Mode Website Switcher",
     "description": "Name of the extension."
   },
   "extensionDescription": {
