@@ -124,6 +124,11 @@
     "description": "A description in the settings explaining the restrictions of the add-on."
   },
 
+  "settingIntroBehaviour": {
+    "message": "The following options allow you to change the current style and the two states the add-on button toggles when you click on it.",
+    "description": "A description in the settings explaining what can be adjusted in the behaviour section."
+  },
+
   "optionsWebsiteStyle": {
     "message": "Website style:",
     "description": "An add-on option."

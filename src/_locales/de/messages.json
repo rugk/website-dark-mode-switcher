@@ -95,6 +95,10 @@
     "message": "Bitte beachte, dass diese Erweiterung die Webseiten nur in einem dunklen Modus anzeigen kann, wenn diese dies unterstützen.",
     "description": "A description in the settings explaining the restrictions of the add-on."
   },
+  "settingIntroBehaviour": {
+    "message": "Mit den folgenden Optionen kannst du den aktuellen Stil und die beiden Zustände ändern, in die der Knopf des Add-ons wechselt, wenn dieser angeklickt wird.",
+    "description": "A description in the settings explaining what can be adjusted in the behaviour section."
+  },
 
   "optionsWebsiteStyle": {
     "message": "Webseitenstil:",

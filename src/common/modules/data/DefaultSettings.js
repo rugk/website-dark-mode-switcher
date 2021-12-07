@@ -7,5 +7,7 @@
 export const DEFAULT_SETTINGS = Object.freeze({
     cleverDarkMode: true,
     prefersColorSchemeOverride: "dark",
-    functionalMode: false
+    functionalMode: false,
+    lightModeVariant: "light",
+    darkModeVariant: "dark"
 });

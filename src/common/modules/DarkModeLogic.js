@@ -36,12 +36,17 @@ const onChangeCallbacks = [];
  * @returns {Promise}
  */
 export async function toggleDarkMode() {
+    AddonSettings.loadOptions();
+    const darkModeVariant = await AddonSettings.get("darkModeVariant");
+    const lightModeVariant = await AddonSettings.get("lightModeVariant");
+
     const currentBrowserSetting = await getCurrentState();
     let newBrowserSetting = "";
-    if (currentBrowserSetting === COLOR_OVERRIDE.DARK) {
-        newBrowserSetting = COLOR_OVERRIDE.LIGHT;
+    if (currentBrowserSetting === COLOR_OVERRIDE.DARK ||
+        currentBrowserSetting === darkModeVariant) {
+        newBrowserSetting = lightModeVariant;
     } else { // if = COLOR_OVERRIDE.LIGHT
-        newBrowserSetting = COLOR_OVERRIDE.DARK;
+        newBrowserSetting = darkModeVariant;
     }
 
     await applySetting(newBrowserSetting);
