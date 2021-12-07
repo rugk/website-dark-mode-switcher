@@ -56,7 +56,7 @@
   "applications": {
     "gecko": {
       "id": "dark-mode-website-switcher@rugk.github.io",
-      "strict_min_version": "95.0a1"
+      "strict_min_version": "95.0"
     }
   }
 }
