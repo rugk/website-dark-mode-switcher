@@ -1,0 +1,40 @@
+{
+  // manifest.json
+  "extensionName": {
+    "message": "Mørk Tilstand Hjemmeside skifter",
+    "description": "Name of the extension.",
+    "hash": "1c347b2756cb4cd138c4e8c84731ca51"
+  },
+  "extensionNameShort": {
+    "message": "Mørk Tilstand Hjemmeside skifter",
+    "description": "Name of the extension.",
+    "hash": "1c347b2756cb4cd138c4e8c84731ca51"
+  },
+  "extensionDescription": {
+    "message": "Skifter hjemmesider til deres mørke tilstand, hvis de understøtter det.",
+    "description": "Description of the extension.",
+    "hash": "ac715a72fd13ff2b45081c96d554483e"
+  },
+  "browserActionButtonTitle": {
+    "message": "Tving Mørk Tilstand",
+    "description": "The title for the button, which opens the popup.",
+    "hash": "0c27fa654612c56f14537e6a6c9ef141"
+  },
+  "commandToggleDarkMode": {
+    "message": "Skift tvingning af mørk tilstand",
+    "description": "Description of the hot key command to toggle the dark mode just like clicking on the browser action (by default with Ctrl+Shift+B).",
+    "hash": "ec5231cdc07a35b5a30865fb18ef368c"
+  },
+
+  // errors or other messages (mostly for settings)
+
+  // browser setting - list of levels of control
+
+  // badges
+
+  // options
+
+  // ARIA labels/descriptions
+
+  "__WET_LOCALE__": { "message": "da" }
+}
