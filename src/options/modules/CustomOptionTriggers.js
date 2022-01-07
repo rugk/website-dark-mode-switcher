@@ -23,7 +23,7 @@ function applyPrefersColorSchemeOverride(optionValue) {
 /**
  * Apply the setting and show it as the used one.
  *
- * @param {string} currentSetting The settting to show as the currently selected one.
+ * @param {string} currentSetting The setting to show as the currently selected one.
  * @returns {void}
  */
 function applySetting(currentSetting) {
