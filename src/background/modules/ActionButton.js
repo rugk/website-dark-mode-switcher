@@ -54,5 +54,3 @@ export function init() {
         color: BADGE_BACKGROUND_COLOR
     });
 }
-
-
