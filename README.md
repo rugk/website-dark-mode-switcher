@@ -20,7 +20,7 @@ This extension only works with modern Firefox v95 or higher. Versions [before v1
 
 ## Download
 
-**[![Get it for Firefox!](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=download-button&campaign=github)**
+**[![Get it for Firefox!](https://extensionworkshop.com/assets/img/documentation/publish/get-the-addon-178x60px.dad84b42.png)](https://addons.mozilla.org/firefox/addon/dark-mode-website-switcher/?utm_source=github.com&utm_medium=git&utm_content=download-button&campaign=github)**
 
 ## Contribute
 
