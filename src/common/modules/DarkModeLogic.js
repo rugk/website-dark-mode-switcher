@@ -1,6 +1,9 @@
 import * as AddonSettings from "/common/modules/AddonSettings/AddonSettings.js";
 import { isControllable } from "/common/modules/BrowserSettings/BrowserSettings.js";
 
+const darkColorSchemeMediaQuery = "(prefers-color-scheme: dark)";
+let isListening = false;
+
 /**
  * A simplified API callback providing the result of the about:config setting.
  *
@@ -40,7 +43,8 @@ export async function toggleDarkMode() {
     const darkModeVariant = await AddonSettings.get("darkModeVariant");
     const lightModeVariant = await AddonSettings.get("lightModeVariant");
 
-    const currentBrowserSetting = await getCurrentState();
+    let currentBrowserSetting = await getCurrentState();
+
     let newBrowserSetting = "";
     if (currentBrowserSetting === COLOR_OVERRIDE.DARK ||
         currentBrowserSetting === darkModeVariant) {
@@ -53,7 +57,28 @@ export async function toggleDarkMode() {
 }
 
 /**
+ * Return the currently used design.
+ *
+ * @returns {string}
+ */
+export async function getCurrentDesign() {
+    // need to temporarily clean override to get "real" value
+    const oldOverride = await getCurrentBrowserOverride();
+    applySetting(null);
+    const isDarkMode = window.matchMedia(darkColorSchemeMediaQuery).matches;
+    applySetting(oldOverride);
+
+    if (isDarkMode) {
+        return COLOR_OVERRIDE.DARK;
+    } else {
+        return COLOR_OVERRIDE.LIGHT;
+    }
+}
+
+/**
  * Return the currently used option.
+ *
+ * If the clever mode is enabled, this returns the current design.
  *
  * @returns {Promise<string>}
  */
@@ -69,7 +94,22 @@ export async function getCurrentState() {
     //     }
     // }
 
-    // reload the setting from browser again as that is the safer value to rely on
+    const cleverDarkMode = await AddonSettings.get("cleverDarkMode");
+
+    if (cleverDarkMode) {
+        return getCurrentDesign();
+    } else {
+        // reload the setting from browser again as that is the safer value to rely on
+        return getCurrentBrowserOverride();
+    }
+}
+
+/**
+ * Return the currently used browser override (by this addon).
+ *
+ * @returns {Promise<string>}
+ */
+export async function getCurrentBrowserOverride() {
     return (await browser.browserSettings.overrideContentColorScheme.get({})).value;
 }
 
@@ -87,8 +127,11 @@ export async function applySetting(newOption) {
     console.log("current browser setting for overrideContentColorScheme:", currentBrowserSetting);
 
     if (!isControllable(currentBrowserSetting.levelOfControl)) {
-        throw Error("Browser setting is not controllable.");
+        throw new Error("Browser setting is not controllable.");
     }
+
+    // temporarily unregister listeners to prevend endless loop
+    unregisterBrowserListener();
 
     let couldBeModified;
     if (newOption === "null" || newOption === null) {
@@ -99,11 +142,20 @@ export async function applySetting(newOption) {
         });
     }
 
+    // re-register after some time
+    setTimeout(() => {
+        registerBrowserListener();
+    }, 1000);
+
     if (!couldBeModified) {
         throw Error("Browser setting could not be modified.");
     }
 
-    await AddonSettings.set("prefersColorSchemeOverride", newOption);
+    const cleverDarkMode = await AddonSettings.get("cleverDarkMode");
+    // do not save setting if interactive clever dark mode is used
+    if (!cleverDarkMode) {
+        await AddonSettings.set("prefersColorSchemeOverride", newOption);
+    }
 }
 
 /**
@@ -130,6 +182,19 @@ function internalTriggerHandler(details) {
 }
 
 /**
+ * Handle any change to the browser setting value and trigger registered callbacks.
+ *
+ * @private
+ * @param {MediaQueryList} mediaQueryList
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener}
+ * @returns {void}
+ */
+async function internalTriggerHandlerForVisibilityChange(mediaQueryList) {
+    const currentValue = await getCurrentDesign();
+    onChangeCallbacks.forEach((callback) => callback(currentValue));
+}
+
+/**
  * Register the internal handler ({@link internalTriggerHandler)}) for handling changes to the browser setting.
  *
  * @private
@@ -137,7 +202,23 @@ function internalTriggerHandler(details) {
  * @returns {void}
  */
 function registerBrowserListener() {
-    browser.browserSettings.overrideContentColorScheme.onChange.addListener(internalTriggerHandler);
+    if (isListening) {
+        console.warn("Dark mode listener is listening already, no need to register.");
+        return;
+    }
+
+    const cleverDarkMode = AddonSettings.get("cleverDarkMode");
+
+    if (cleverDarkMode) {
+        // TODO: switch to new EventListener API
+        // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        const darkModeQueryList = window.matchMedia(darkColorSchemeMediaQuery);
+        darkModeQueryList.addListener(internalTriggerHandlerForVisibilityChange);
+    } else {
+        browser.browserSettings.overrideContentColorScheme.onChange.addListener(internalTriggerHandler);
+    }
+
+    isListening = true;
 }
 
 /**
@@ -148,7 +229,17 @@ function registerBrowserListener() {
  * @returns {void}
  */
 function unregisterBrowserListener() {
+    if (!isListening) {
+        console.warn("Dark mode listener is not listening already, no need to unregister.");
+        return;
+    }
+
     browser.browserSettings.overrideContentColorScheme.onChange.removeListener(internalTriggerHandler);
+
+    const darkModeQueryList = window.matchMedia(darkColorSchemeMediaQuery);
+    darkModeQueryList.removeListener(internalTriggerHandlerForVisibilityChange);
+
+    isListening = false;
 }
 
 // automatically init itself as fast as possible
